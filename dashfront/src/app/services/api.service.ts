@@ -9,8 +9,8 @@ import {HttpClient, HttpHeaders, HttpErrorResponse} from "@angular/common/http";
 
 export class ApiService {
 
-  //REST_API: string = 'http://localhost:3080/donnees';
-  REST_API: string = 'https://celestrak.org/NORAD/elements/gp.php?GROUP=stations&FORMAT=json';
+  REST_API: string = 'http://localhost:3080/donnees';
+  //REST_API: string = 'https://celestrak.org/NORAD/elements/gp.php?GROUP=stations&FORMAT=json';
   constructor(private httpClient: HttpClient) { }
 
   GetInfos() {

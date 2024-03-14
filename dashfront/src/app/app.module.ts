@@ -6,8 +6,8 @@ import { AppComponent } from "./app.component";
 import { HeaderComponent } from "./components/header/header.component";
 
 import { HttpClientModule } from "@angular/common/http";
-import {RouterModule} from "@angular/router";
-import { _HttpClient } from
+import { RouterModule } from "@angular/router";
+import { ApiService } from "./services/api.service";
 
 @NgModule({
   declarations: [
@@ -19,7 +19,7 @@ import { _HttpClient } from
     RouterModule.forRoot(routes),
     HeaderComponent
   ],
-  providers: [_HttpClient],
+  providers: [ApiService],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {  }

@@ -6,16 +6,20 @@ import {CommonModule} from "@angular/common";
   selector: 'app-header',
   standalone: true,
   imports: [CommonModule],
+  providers: [ApiService],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent implements OnInit {
   Infos:any = [];
 
-  constructor(private apiService: ApiService) {  }
+  constructor(private apiService: ApiService) {
+
+  }
 
   ngOnInit(): void {
-    this.apiService.GetInfos().subscribe(res => {
+    this.apiService.GetInfos()
+      .subscribe(res => {
       console.log(res);
       this.Infos = res;
     });

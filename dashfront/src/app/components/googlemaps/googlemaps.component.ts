@@ -9,18 +9,30 @@ const loader = new Loader({
   libraries: ["places"]
 });
 
-// Paramètres de la carte (coordonées latitudes et longitudes et le zoom)
+// Paramètres de la carte
 let mapOptions = {
   center: {
-    lat: 0,
-    lng: 0
+    lat: -25.363,
+    lng: 131.044
   },
-  zoom: 0
+  zoom: 4
 };
 
 function initMap() {
+
   loader.load().then((google) => {
-    map = new google.maps.Map(document.getElementById("map") as HTMLElement, mapOptions);
+    map = new google.maps.Map(
+      document.getElementById("map") as HTMLElement,
+      mapOptions
+    );
+  });
+  new google.maps.Marker({
+    position: {
+      lat: -25.363,
+      lng: 131.044
+    },
+    map,
+    title: "Hello World!",
   });
 }
 

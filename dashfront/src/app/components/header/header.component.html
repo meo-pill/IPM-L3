@@ -4,6 +4,7 @@
     <li><a class="btn btn-outline-dark" href="#">bouton footer</a></li>
     <li><a class="btn btn-outline-dark" href="#">bouton footer</a></li>
   </ul>
+  <input [(ngModel)]="searchTerm" (keyup.enter)="search()" placeholder="Search...">
 </header>
 
 <div>
@@ -12,47 +13,21 @@
   </div>
 
   <div>
-    <table style="border: 2mm black">
-      <thead>
+    <table class="table table-info">
+      <thead class="tab-pane">
         <tr>
           <th>Nom</th>
           <th>Id</th>
-          <th>Epoch</th>
-          <th>Moyen mouvement</th>
-          <th>Eccentricité</th>
-          <th>Inclinaison</th>
-          <th>RA of Asc Node</th>
-          <th>Arg of Pericenter</th>
-          <th>Mean Anomaly</th>
-          <th>Ephemeris Type</th>
-          <th>Classification Type</th>
-          <th>Norad Cat Id</th>
-          <th>Element Set No</th>
-          <th>Rev at Epoch</th>
-          <th>Bstar</th>
-          <th>Mean Motion Dot</th>
-          <th>Mean Motion Ddot</th>
+          <th>Latitude</th>
+          <th>Longitude</th>
         </tr>
       </thead>
-      <tbody>
-        <tr *ngFor="let info of Infos; let i = index">
-          <td>{{info.OBJECT_NAME}}</td>
-          <td>{{info.OBJECT_ID}}</td>
-          <td>{{info.EPOCH}}</td>
-          <td>{{info.MEAN_MOTION}}</td>
-          <td>{{info.ECCENTRICITY}}</td>
-          <td>{{info.INCLINATION}}</td>
-          <td>{{info.RA_OF_ASC_NODE}}</td>
-          <td>{{info.ARG_OF_PERICENTER}}</td>
-          <td>{{info.MEAN_ANOMALY}}</td>
-          <td>{{info.EPHEMERIS_TYPE}}</td>
-          <td>{{info.CLASSIFICATION_TYPE}}</td>
-          <td>{{info.NORAD_CAT_ID}}</td>
-          <td>{{info.ELEMENT_SET_NO}}</td>
-          <td>{{info.REV_AT_EPOCH}}</td>
-          <td>{{info.BSTAR}}</td>
-          <td>{{info.MEAN_MOTION_DOT}}</td>
-          <td>{{info.MEAN_MOTION_DDOT}}</td>
+      <tbody class="tab-content">
+        <tr>
+          <td>{{Infos?.info?.satname}}</td>
+          <td>{{Infos?.info?.satid}}</td>
+          <td>{{(positions$ | async)?.satlatitude}}</td>
+          <td>{{(positions$ | async)?.satlongitude}}</td>
         </tr>
       </tbody>
     </table>

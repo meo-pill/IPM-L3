@@ -13,8 +13,13 @@ export class ApiService {
   //REST_API: string = 'https://celestrak.org/NORAD/elements/gp.php?GROUP=stations&FORMAT=json';
   constructor(private httpClient: HttpClient) { }
 
-  GetInfos() {
+  GetInfos(id: string) {
     console.log('GetInfos');
-    return this.httpClient.get(`${this.REST_API}`);
+    return this.httpClient.get(`${this.REST_API}/${id}`);
+  }
+
+  getNames(searchTerm: string) {
+    const url = `https://celestrak.org/NORAD/elements/table.php?NAME=${searchTerm}`;
+    return this.httpClient.get(url, {responseType: 'text'});
   }
 }

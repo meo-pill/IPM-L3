@@ -17,7 +17,7 @@ import { ApiService } from "./services/api.service";
     BrowserModule,
     HttpClientModule,
     RouterModule.forRoot(routes),
-    HeaderComponent
+    HeaderComponent,
   ],
   providers: [ApiService],
   bootstrap: [AppComponent]

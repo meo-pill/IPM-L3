@@ -1,10 +1,12 @@
 import { Routes } from "@angular/router";
-import { CompoTestComponent } from "./components/compo-test/compo-test.component";
+import { GooglemapsComponent } from "./components/googlemaps/googlemaps.component";
+import { SelectSatellitesComponent } from "./components/select-satellites/select-satellites.component";
 
 
 export const routes: Routes = [
     // Define your routes here
     // { path: '', component: YourComponent },
-    { path: 'header', component: CompoTestComponent }
+    { path: 'select', component: SelectSatellitesComponent },
+    { path: 'map', component: GooglemapsComponent }
 ];
 

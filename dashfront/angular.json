@@ -30,7 +30,11 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "src/assets/css/nucleo-icons.css",
+              "src/assets/scss/blk-design-system.scss",
+              "src/assets/demo/demo.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
@@ -95,7 +99,6 @@
             "styles": [
               "src/styles.scss",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "src/assets/css/nucleo-icons.css",
               "src/assets/css/nucleo-icons.css",
               "src/assets/scss/blk-design-system.scss",
               "src/assets/demo/demo.css"

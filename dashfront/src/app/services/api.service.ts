@@ -19,7 +19,7 @@ export class ApiService {
   }
 
   getNames(searchTerm: string) {
-    const url = `https://celestrak.org/NORAD/elements/table.php?NAME=${searchTerm}`;
+    const url = `https://celestrak.org/NORAD/elements/table.php?NAME=${searchTerm}&ACTIVE=1&MAX=10`;
     return this.httpClient.get(url, {responseType: 'text'});
   }
 }

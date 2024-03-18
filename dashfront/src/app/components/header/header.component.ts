@@ -64,13 +64,15 @@ export class HeaderComponent implements OnInit {
       .subscribe(res => {
 
         // Récupérer une liste des noms de satellites + ID NORAD via scrapping
-        this.searchResult = res.split('<tbody>')[1].split('</tbody>')[0].split('<tr>');
+        this.searchResult = res.split('<tbody>')[1].split('</tbody>')[0].split('</tr>');
+        this.searchResult.pop();
+
+        // Nettoyer les données
         for (let i = 0; i < this.searchResult.length; i++) {
-          console.log("AAAAAAAAAAAAAAA" + this.searchResult[i]);
-          let buffer = '(' + this.searchResult[i].split(/<td[^>]*=[^>]*>/g)[1].split('</td>')[2] + ')';
-          buffer = buffer + this.searchResult[i].split(/<td[^>]*=[^>]*>/g)[1].split('</td>')[3];
-          console.log(buffer);
-          this.searchResult[i] = buffer;
+            let buffer = this.searchResult[i].split("</td>")[1].split("</a>")[0];
+            buffer = '[' + buffer.split('>')[buffer.split('>').length - 1] + '] ';
+            buffer += this.searchResult[i].split("</td>")[2].split('>')[1].split('<a')[0];
+            this.searchResult[i] = buffer;
         }
       });
   }

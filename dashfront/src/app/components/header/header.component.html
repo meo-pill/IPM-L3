@@ -14,7 +14,7 @@
 
   <div>
     <ul>
-      <li *ngFor="let result of searchResult">{{result}}</li>
+      <li *ngFor="let result of searchResult" (click)="fetch(result.split('[')[1].split(']')[0]);">{{result}}</li>
     </ul>
     <table class="table table-info">
       <thead class="tab-pane">

@@ -19,17 +19,37 @@ export class HeaderComponent implements OnInit {
   positions$: Observable<any> | undefined; // Seconde requête à N2YO
   searchTerm: string = '';
   searchResult: Array<string> = [];
+  descInfos: {[key: string] : string} = {
+    // 'name': '',
+    // 'desc': '',
+    // 'img': '',
+    //
+    // 'satId': '',
+    // 'noradId': '',
+    //
+    // 'alt': '',
+    // 'site': '',
+    // 'origin': '',
+    // 'launch': '',
+  };
+
 
   constructor(private apiService: ApiService) { }
 
   ngOnInit(): void {
-    //this.fetchInfos('25544');
+    this.fetchPos('25544');
+  }
+
+  fetch(id: string) :void {
+    this.fetchInfos(id);
+    this.fetchPos(id);
   }
 
 
-  fetchInfos(req :string): void {
+  // Récupérer les données de N2YO
+  fetchPos(req :string): void {
     let alive = true;
-    this.apiService.GetInfos(req)
+    this.apiService.getPos(req)
 
       // Serveur déconnecté, réessayer la connexion
       .pipe(catchError(err => {
@@ -50,12 +70,40 @@ export class HeaderComponent implements OnInit {
             if (i % this.Infos.positions.length === this.Infos.positions.length - 1) {
               console.log('Reached the end of the table');
               alive = false;
-              return this.fetchInfos(req);
+              return this.fetchPos(req);
             }
             return this.Infos.positions[i % this.Infos.positions.length];
           })
         );
       });
+  }
+
+  // Récupérer description & image du satellite
+  fetchInfos(id: string) :void {
+    this.apiService.getInfos(id).subscribe( res => {
+      this.descInfos = {};
+      let buffer = res.split('            Mission information\n' + '          </div>\n' + '          <div class="card-body">\n' + '            <dl class="row">\n')[1]
+        .split('            </dl>\n' + '          </div>\n' + '        </div>\n' + '        <!-- Satellite Status -->')[0];
+
+      let lines = buffer.split('\n');
+
+      for (let i = 0; i < lines.length; i++) {
+        if (lines[i].includes('<dt class="col-sm-5"')) {
+          let key = lines[i].split('>')[1].split('<')[0];
+          let value = lines[i+1].split('>')[1].split('<')[0];
+          this.descInfos[key] = value;
+        }
+        if (lines[i].includes('Countries of Origin')) {
+          let countries = lines[i+1].match(/<span class="mb-0">(.+?)<\/span>/g);
+          if (countries) {
+            this.descInfos['Countries of Origin'] = countries.map(country => country.split('>')[1].split('<')[0]).join(' | ');
+          }
+        }
+      }
+
+      console.log(this.descInfos);
+
+    });
   }
 
   // Rechercher un satellite sur le site du catalogue Celestrak
@@ -64,7 +112,7 @@ export class HeaderComponent implements OnInit {
       .subscribe(res => {
 
         // Récupérer une liste des noms de satellites + ID NORAD via scrapping
-        this.searchResult = res.split('<tbody>')[1].split('</tbody>')[0].split('</tr>');
+        this.searchResult = res.split('<tbody>')[1].split('</tbody>')[0].split('</tr>').slice(0,11);
         this.searchResult.pop();
 
         // Nettoyer les données

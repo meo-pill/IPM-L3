@@ -16,3 +16,8 @@
   display: inline;
   margin-right: 2vw; // Change this value to adjust the spacing
 }
+
+li:hover {
+  font-weight: bold;
+  cursor: pointer;
+}

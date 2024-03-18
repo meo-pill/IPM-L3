@@ -13,9 +13,14 @@ export class ApiService {
   //REST_API: string = 'https://celestrak.org/NORAD/elements/gp.php?GROUP=stations&FORMAT=json';
   constructor(private httpClient: HttpClient) { }
 
-  GetInfos(id: string) {
+  getPos(id: string) {
     console.log('GetInfos');
     return this.httpClient.get(`${this.REST_API}/${id}`);
+  }
+
+  getInfos(id: string) {
+    const url = `https://db.satnogs.org/satellite/${id}`;
+    return this.httpClient.get(url, {responseType: 'text'});
   }
 
   getNames(searchTerm: string) {

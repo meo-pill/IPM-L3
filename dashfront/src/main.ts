@@ -1,10 +1,10 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';
-import { AppComponent } from './app/app.component';
-import { HeaderComponent } from "./app/components/header/header.component";
+//import { CompoTestComponent } from './app/components/compo-test/compo-test.component';
+//import { AppComponent } from './app/app.component';
+import { GooglemapsComponent } from './app/components/googlemaps/googlemaps.component';
 
-// bootstrapApplication(AppComponent, appConfig)
-//   .catch((err) => console.error(err));
 
-bootstrapApplication(HeaderComponent, appConfig)
+//bootstrapApplication(AppComponent, appConfig)
+bootstrapApplication(GooglemapsComponent, appConfig)
   .catch((err) => console.error(err));

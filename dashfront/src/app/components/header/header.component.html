@@ -9,7 +9,7 @@
 
 <div>
   <div>
-    <h4>Infos</h4>
+    <h4>Positions</h4>
   </div>
 
   <div>
@@ -32,6 +32,30 @@
           <td>{{(positions$ | async)?.satlatitude}}</td>
           <td>{{(positions$ | async)?.satlongitude}}</td>
         </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div>
+  <div>
+    <h4>Infos</h4>
+  </div>
+  <div>
+    <table>
+      <thead>
+      <tr>
+        <th *ngFor="let item of descInfos | keyvalue">{{ item.key }}</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td *ngFor="let item of descInfos | keyvalue">
+          <img *ngIf="item.key === 'img'" [src]="item.value" alt="Image">
+          <a *ngIf="item.key === 'site'" [href]="item.value" target="_blank">{{ item.value }}</a>
+          <span *ngIf="item.key !== 'img' && item.key !== 'site'">{{ item.value }}</span>
+        </td>
+      </tr>
       </tbody>
     </table>
   </div>

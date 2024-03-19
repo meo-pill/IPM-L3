@@ -16,18 +16,18 @@ import {FormsModule} from "@angular/forms";
 
 export class HeaderComponent implements OnInit {
   Infos:any = []; // Première requête à celestrak
-  positions$: Observable<any> | undefined; // Seconde requête à N2YO
+  positions$: Observable<any> | undefined; // Itérateur sur les positions du satellite
   searchTerm: string = '';
   searchResult: Array<string> = [];
   descInfos: {[key: string] : string} = {
     // 'name': '',
-    // 'desc': '',
     // 'img': '',
     //
     // 'satId': '',
     // 'noradId': '',
     //
-    // 'alt': '',
+    // 'desc': '',
+    // 'names': '',
     // 'site': '',
     // 'origin': '',
     // 'launch': '',
@@ -37,7 +37,7 @@ export class HeaderComponent implements OnInit {
   constructor(private apiService: ApiService) { }
 
   ngOnInit(): void {
-    this.fetchPos('25544');
+    this.fetch('25544');
   }
 
   fetch(id: string) :void {
@@ -81,28 +81,19 @@ export class HeaderComponent implements OnInit {
   // Récupérer description & image du satellite
   fetchInfos(id: string) :void {
     this.apiService.getInfos(id).subscribe( res => {
+      let json = JSON.parse(JSON.stringify(res));
       this.descInfos = {};
-      let buffer = res.split('            Mission information\n' + '          </div>\n' + '          <div class="card-body">\n' + '            <dl class="row">\n')[1]
-        .split('            </dl>\n' + '          </div>\n' + '        </div>\n' + '        <!-- Satellite Status -->')[0];
-
-      let lines = buffer.split('\n');
-
-      for (let i = 0; i < lines.length; i++) {
-        if (lines[i].includes('<dt class="col-sm-5"')) {
-          let key = lines[i].split('>')[1].split('<')[0];
-          let value = lines[i+1].split('>')[1].split('<')[0];
-          this.descInfos[key] = value;
-        }
-        if (lines[i].includes('Countries of Origin')) {
-          let countries = lines[i+1].match(/<span class="mb-0">(.+?)<\/span>/g);
-          if (countries) {
-            this.descInfos['Countries of Origin'] = countries.map(country => country.split('>')[1].split('<')[0]).join(' | ');
-          }
-        }
-      }
+      this.descInfos['name'] = json['name'];
+      if (json['names'] != "") this.descInfos['names'] = json['names'];
+      this.descInfos['img'] = json['image'] == "" ? "src/assets/img/sat_default.png" : 'https://db-satnogs.freetls.fastly.net/media/'+json['image'];
+      this.descInfos['noradId'] = json['norad_cat_id'];
+      this.descInfos['satId'] = json['sat_id'];
+      this.descInfos['status'] = json['status'];
+      if (json['launched'] != null) this.descInfos['launch'] = json['launched'];
+      if (json['countries'] != "") this.descInfos['origin'] = json['countries'];
+      if (json['website'] != "") this.descInfos['site'] = json['website'];
 
       console.log(this.descInfos);
-
     });
   }
 

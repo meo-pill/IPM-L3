@@ -78,18 +78,28 @@ export class HeaderComponent implements OnInit {
 
   // Récupérer description & image du satellite
   fetchInfos(id: string) :void {
-    this.apiService.getInfos(id).subscribe( res => {
+    this.apiService.getInfos(id)
+
+      .pipe(catchError(err => {
+        console.error();
+        return of(err).pipe(delay(5000), switchMap(() => throwError(err))); // Throw the error after the delay
+      }),retry())
+
+      .subscribe( res => {
       let json = JSON.parse(JSON.stringify(res));
       this.descInfos = {};
-      this.descInfos['name'] = json['name'];
-      if (json['names'] != "") this.descInfos['names'] = json['names'];
-      this.descInfos['img'] = json['image'] == "" ? "src/assets/img/sat_default.png" : 'https://db-satnogs.freetls.fastly.net/media/'+json['image'];
-      this.descInfos['noradId'] = json['norad_cat_id'];
-      this.descInfos['satId'] = json['sat_id'];
-      this.descInfos['status'] = json['status'];
-      if (json['launched'] != null) this.descInfos['launch'] = json['launched'];
-      if (json['countries'] != "") this.descInfos['origin'] = json['countries'];
-      if (json['website'] != "") this.descInfos['site'] = json['website'];
+      if (json['name'] != "") {
+        this.descInfos['name'] = json['name'];
+        if (json['names'] != "") this.descInfos['names'] = json['names'];
+        this.descInfos['img'] = json['image'] == "" ? "src/assets/img/sat_default.png" : 'https://db-satnogs.freetls.fastly.net/media/' + json['image'];
+        this.descInfos['noradId'] = json['norad_cat_id'];
+        this.descInfos['satId'] = json['sat_id'];
+        this.descInfos['status'] = json['status'];
+        if (json['launched'] != null) this.descInfos['launch'] = json['launched'];
+        if (json['countries'] != "") this.descInfos['origin'] = json['countries'];
+        if (json['website'] != "") this.descInfos['site'] = json['website'];
+      }
+      else alert("Informations du satellite non disponibles.");
     });
   }
 

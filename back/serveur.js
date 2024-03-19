@@ -10,14 +10,14 @@ app.get("/donnees/:req", async (req, res) => {
     try {
     const response = await axios.get(`https://api.n2yo.com/rest/v1/satellite/positions/${req.params.req}/0/0/0/300/&apiKey=Q95HV2-VUCS8A-YCRKGZ-571M`)
     res.json(response.data)
-    } catch (error) {res.json({error: "Satellite non trouvé"})}
+    } catch (error) {res.json({name: ""})}
 });
 
 app.get("/infos/:req", async (req, res) => {
     try {
     const response = await axios.get(`https://db.satnogs.org/api/satellites/${req.params.req}/?format=json`)
     res.json(response.data)
-    } catch (error) {res.json({error: "Satellite non trouvé"})}
+    } catch (error) {res.json({name: ""})}
 });
 
 app.listen(port, () => {

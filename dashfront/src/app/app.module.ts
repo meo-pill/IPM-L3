@@ -10,6 +10,7 @@ import { RouterModule } from "@angular/router";
 import { ApiService } from "./services/api.service";
 import { GooglemapsComponent } from "./components/googlemaps/googlemaps.component";
 import { GoogleMapsModule } from "@angular/google-maps";
+import { FooterComponent } from "./components/footer/footer.component";
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { GoogleMapsModule } from "@angular/google-maps";
         HttpClientModule,
         RouterModule.forRoot(routes),
         CompoTestComponent,
-        GoogleMapsModule
+        GoogleMapsModule,
+        FooterComponent
     ],
     providers: [ApiService],
     bootstrap: [AppComponent]

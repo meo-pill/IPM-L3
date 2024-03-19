@@ -59,7 +59,6 @@ export class HeaderComponent implements OnInit {
 
       // Serveur connecté, récupérer les données
       .subscribe(res => {
-        console.log(res);
         this.Infos = res;
         this.positions$ = interval(1000)
 
@@ -68,7 +67,6 @@ export class HeaderComponent implements OnInit {
           map(i => {
             // Fin de boucle : recommencer le procédé
             if (i % this.Infos.positions.length === this.Infos.positions.length - 1) {
-              console.log('Reached the end of the table');
               alive = false;
               return this.fetchPos(req);
             }
@@ -92,8 +90,6 @@ export class HeaderComponent implements OnInit {
       if (json['launched'] != null) this.descInfos['launch'] = json['launched'];
       if (json['countries'] != "") this.descInfos['origin'] = json['countries'];
       if (json['website'] != "") this.descInfos['site'] = json['website'];
-
-      console.log(this.descInfos);
     });
   }
 

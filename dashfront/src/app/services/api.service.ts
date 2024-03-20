@@ -25,4 +25,8 @@ export class ApiService {
     const url = `https://celestrak.org/NORAD/elements/table.php?NAME=${searchTerm}&ACTIVE=1&MAX=10`;
     return this.httpClient.get(url, {responseType: 'text'});
   }
+
+  getDesc(id: string) {
+    return this.httpClient.get(`${this.REST_API}/satellite/${id}`, {responseType: 'text'});
+  }
 }

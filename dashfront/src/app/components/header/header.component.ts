@@ -19,6 +19,7 @@ export class HeaderComponent implements OnInit {
   positions$: Observable<any> | undefined; // Itérateur sur les positions du satellite
   searchTerm: string = '';
   searchResult: Array<string> = [];
+  description: string = '';
   descInfos: {[key: string] : string} = {
     // 'name': '',
     // 'img': '',
@@ -101,6 +102,15 @@ export class HeaderComponent implements OnInit {
       }
       else alert("Informations du satellite non disponibles.");
     });
+
+
+    // Récupérer la description du satellite via scrapping
+    this.apiService.getDesc(this.descInfos['satId'])
+      .subscribe( res => {
+        this.description = res.split('<!-- Satellite Description -->')[1].split('<p>')[1].split('</p>')[0];
+        console.log(this.description);
+      });
+
   }
 
   // Rechercher un satellite sur le site du catalogue Celestrak

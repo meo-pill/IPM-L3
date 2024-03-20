@@ -1,3 +1,4 @@
+
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
@@ -18,6 +19,15 @@ app.get("/infos/:req", async (req, res) => {
     const response = await axios.get(`https://db.satnogs.org/api/satellites/${req.params.req}/?format=json`)
     res.json(response.data)
     } catch (error) {res.json({name: ""})}
+});
+
+app.get("/satellite/:id", async (req, res) => {
+    try {
+        const response = await axios.get(`https://db.satnogs.org/satellite/${req.params.id}`);
+        res.send(response.data);
+    } catch (error) {
+        res.send({name: ""});
+    }
 });
 
 app.listen(port, () => {

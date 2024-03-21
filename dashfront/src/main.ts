@@ -6,6 +6,7 @@ import { GooglemapsComponent } from './app/components/googlemaps/googlemaps.comp
 import { HeaderComponent } from "./app/components/header/header.component";
 import { SelectSatellitesComponent } from './app/components/select-satellites/select-satellites.component';
 import { AppComponent } from './app/app.component';
+import { FooterComponent } from './app/components/footer/footer.component';
 
 // bootstrapApplication(AppComponent, appConfig)
 //    .catch((err) => console.error(err));
@@ -17,4 +18,6 @@ bootstrapApplication(HeaderComponent, appConfig)
 //bootstrapApplication(AppComponent, appConfig)
 
 bootstrapApplication(AppComponent, appConfig)
+  .catch((err) => console.error(err));
+bootstrapApplication(FooterComponent, appConfig)
   .catch((err) => console.error(err));

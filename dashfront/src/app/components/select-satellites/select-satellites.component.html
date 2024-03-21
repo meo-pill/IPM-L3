@@ -1,0 +1,33 @@
+<header class="header Header">
+    <ul>
+        <li><img class="btn btn-outline-dark" src="#">bouton footer</li>
+        <li><a class="btn btn-outline-dark" href="#">bouton footer</a></li>
+        <li><a class="btn btn-outline-dark" href="#">bouton footer</a></li>
+    </ul>
+    <input [(ngModel)]="searchTerm" (keyup.enter)="search()" placeholder="Search...">
+</header>
+
+<div>
+    <div>
+        <h4>Infos</h4>
+    </div>
+
+    <div>
+        <table class="table table-info">
+            <thead class="tab-pane">
+                <tr>
+                    <th>Nom</th>
+                    <th>Id</th>
+                    <th>Latitude</th>
+                    <th>Longitude</th>
+                </tr>
+            </thead>
+            <tbody class="tab-content">
+                <tr>
+                    <td>{{Infos?.info?.satname}}</td>
+                    <td>{{Infos?.info?.satid}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

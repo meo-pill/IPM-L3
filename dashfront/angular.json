@@ -96,7 +96,6 @@
               "src/styles.scss",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/assets/css/nucleo-icons.css",
-              "src/assets/css/nucleo-icons.css",
               "src/assets/scss/blk-design-system.scss",
               "src/assets/demo/demo.css"
             ],

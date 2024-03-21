@@ -3,7 +3,6 @@ import { appConfig } from './app/app.config';
 //import { CompoTestComponent } from './app/components/compo-test/compo-test.component';
 //import { AppComponent } from './app/app.component';
 import { GooglemapsComponent } from './app/components/googlemaps/googlemaps.component';
-import { HeaderComponent } from "./app/components/header/header.component";
 import { SelectSatellitesComponent } from './app/components/select-satellites/select-satellites.component';
 import { AppComponent } from './app/app.component';
 import { FooterComponent } from './app/components/footer/footer.component';
@@ -13,7 +12,7 @@ import { FooterComponent } from './app/components/footer/footer.component';
 
 bootstrapApplication(GooglemapsComponent, appConfig)
   .catch((err) => console.error(err));
-bootstrapApplication(HeaderComponent, appConfig)
+bootstrapApplication(SelectSatellitesComponent, appConfig)
   .catch((err) => console.error(err));
 //bootstrapApplication(AppComponent, appConfig)
 

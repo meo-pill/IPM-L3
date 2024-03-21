@@ -1,374 +1,111 @@
 const express = require('express');
 const cors = require('cors');
+const axios = require('axios');
 const app = express(),
     port = 3080;
 
 app.use(cors());
 
-app.get("/donnees", (req, res) => {
-    res.json([
-        {
-            "OBJECT_NAME": "ISS (ZARYA)",
-            "OBJECT_ID": "1998-067A",
-            "EPOCH": "2024-02-20T05:55:39.845280",
-            "MEAN_MOTION": 15.50164985,
-            "ECCENTRICITY": 0.0001745,
-            "INCLINATION": 51.6397,
-            "RA_OF_ASC_NODE": 179.8436,
-            "ARG_OF_PERICENTER": 287.6325,
-            "MEAN_ANOMALY": 144.9061,
-            "EPHEMERIS_TYPE": 0,
-            "CLASSIFICATION_TYPE": "U",
-            "NORAD_CAT_ID": 25544,
-            "ELEMENT_SET_NO": 999,
-            "REV_AT_EPOCH": 44026,
-            "BSTAR": 0.00033903,
-            "MEAN_MOTION_DOT": 0.00019052,
-            "MEAN_MOTION_DDOT": 0
-        },
-        {
-            "OBJECT_NAME": "ISS DEB",
-            "OBJECT_ID": "1998-067RZ",
-            "EPOCH": "2024-02-19T11:56:13.910208",
-            "MEAN_MOTION": 16.0955325,
-            "ECCENTRICITY": 0.0005224,
-            "INCLINATION": 51.6203,
-            "RA_OF_ASC_NODE": 95.6999,
-            "ARG_OF_PERICENTER": 25.4208,
-            "MEAN_ANOMALY": 334.7062,
-            "EPHEMERIS_TYPE": 0,
-            "CLASSIFICATION_TYPE": "U",
-            "NORAD_CAT_ID": 47853,
-            "ELEMENT_SET_NO": 999,
-            "REV_AT_EPOCH": 16793,
-            "BSTAR": 0.00038085,
-            "MEAN_MOTION_DOT": 0.00357295,
-            "MEAN_MOTION_DDOT": 0.000073743
-        },
-        {
-            "OBJECT_NAME": "CSS (TIANHE)",
-            "OBJECT_ID": "2021-035A",
-            "EPOCH": "2024-02-20T02:53:52.768896",
-            "MEAN_MOTION": 15.62001451,
-            "ECCENTRICITY": 0.0009212,
-            "INCLINATION": 41.469,
-            "RA_OF_ASC_NODE": 84.5005,
-            "ARG_OF_PERICENTER": 343.4099,
-            "MEAN_ANOMALY": 16.6438,
-            "EPHEMERIS_TYPE": 0,
-            "CLASSIFICATION_TYPE": "U",
-            "NORAD_CAT_ID": 48274,
-            "ELEMENT_SET_NO": 999,
-            "REV_AT_EPOCH": 16061,
-            "BSTAR": 0.00032978,
-            "MEAN_MOTION_DOT": 0.00029453,
-            "MEAN_MOTION_DDOT": 0
-        },
-        {
-            "OBJECT_NAME": "ISS (NAUKA)",
-            "OBJECT_ID": "2021-066A",
-            "EPOCH": "2024-02-19T20:19:59.134080",
-            "MEAN_MOTION": 15.50143974,
-            "ECCENTRICITY": 0.0001998,
-            "INCLINATION": 51.6379,
-            "RA_OF_ASC_NODE": 181.827,
-            "ARG_OF_PERICENTER": 289.9742,
-            "MEAN_ANOMALY": 70.1032,
-            "EPHEMERIS_TYPE": 0,
-            "CLASSIFICATION_TYPE": "U",
-            "NORAD_CAT_ID": 49044,
-            "ELEMENT_SET_NO": 999,
-            "REV_AT_EPOCH": 44016,
-            "BSTAR": 0.00027278,
-            "MEAN_MOTION_DOT": 0.00015221,
-            "MEAN_MOTION_DDOT": 0
-        },
-        {
-            "OBJECT_NAME": "FREGAT DEB",
-            "OBJECT_ID": "2011-037PF",
-            "EPOCH": "2024-02-19T10:32:27.471840",
-            "MEAN_MOTION": 12.11406639,
-            "ECCENTRICITY": 0.0947448,
-            "INCLINATION": 51.6332,
-            "RA_OF_ASC_NODE": 326.4928,
-            "ARG_OF_PERICENTER": 234.002,
-            "MEAN_ANOMALY": 116.9349,
-            "EPHEMERIS_TYPE": 0,
-            "CLASSIFICATION_TYPE": "U",
-            "NORAD_CAT_ID": 49271,
-            "ELEMENT_SET_NO": 999,
-            "REV_AT_EPOCH": 12078,
-            "BSTAR": -0.0023705,
-            "MEAN_MOTION_DOT": -0.00000977,
-            "MEAN_MOTION_DDOT": 0
-        },
-        {
-            "OBJECT_NAME": "CSS (WENTIAN)",
-            "OBJECT_ID": "2022-085A",
-            "EPOCH": "2024-02-19T19:13:31.829376",
-            "MEAN_MOTION": 15.61981406,
-            "ECCENTRICITY": 0.0009271,
-            "INCLINATION": 41.4681,
-            "RA_OF_ASC_NODE": 86.4503,
-            "ARG_OF_PERICENTER": 341.6732,
-            "MEAN_ANOMALY": 18.3772,
-            "EPHEMERIS_TYPE": 0,
-            "CLASSIFICATION_TYPE": "U",
-            "NORAD_CAT_ID": 53239,
-            "ELEMENT_SET_NO": 999,
-            "REV_AT_EPOCH": 16037,
-            "BSTAR": 0.00029376,
-            "MEAN_MOTION_DOT": 0.00026167,
-            "MEAN_MOTION_DDOT": 0
-        },
-        {
-            "OBJECT_NAME": "CSS (MENGTIAN)",
-            "OBJECT_ID": "2022-143A",
-            "EPOCH": "2024-02-19T19:13:31.829376",
-            "MEAN_MOTION": 15.61981406,
-            "ECCENTRICITY": 0.0009271,
-            "INCLINATION": 41.4681,
-            "RA_OF_ASC_NODE": 86.4503,
-            "ARG_OF_PERICENTER": 341.6732,
-            "MEAN_ANOMALY": 18.3772,
-            "EPHEMERIS_TYPE": 0,
-            "CLASSIFICATION_TYPE": "U",
-            "NORAD_CAT_ID": 54216,
-            "ELEMENT_SET_NO": 999,
-            "REV_AT_EPOCH": 16037,
-            "BSTAR": 0.00029376,
-            "MEAN_MOTION_DOT": 0.00026167,
-            "MEAN_MOTION_DDOT": 0
-        },
-        {
-            "OBJECT_NAME": "ISS DEB",
-            "OBJECT_ID": "1998-067VP",
-            "EPOCH": "2024-02-19T14:19:26.081760",
-            "MEAN_MOTION": 15.73254284,
-            "ECCENTRICITY": 0.0004517,
-            "INCLINATION": 51.6303,
-            "RA_OF_ASC_NODE": 165.8609,
-            "ARG_OF_PERICENTER": 294.8655,
-            "MEAN_ANOMALY": 65.1874,
-            "EPHEMERIS_TYPE": 0,
-            "CLASSIFICATION_TYPE": "U",
-            "NORAD_CAT_ID": 57212,
-            "ELEMENT_SET_NO": 999,
-            "REV_AT_EPOCH": 3732,
-            "BSTAR": 0.00064577,
-            "MEAN_MOTION_DOT": 0.0009141,
-            "MEAN_MOTION_DDOT": 0
-        },
-        {
-            "OBJECT_NAME": "CREW DRAGON 7",
-            "OBJECT_ID": "2023-128A",
-            "EPOCH": "2024-02-19T20:19:59.134080",
-            "MEAN_MOTION": 15.50143974,
-            "ECCENTRICITY": 0.0001998,
-            "INCLINATION": 51.6379,
-            "RA_OF_ASC_NODE": 181.827,
-            "ARG_OF_PERICENTER": 289.9742,
-            "MEAN_ANOMALY": 70.1032,
-            "EPHEMERIS_TYPE": 0,
-            "CLASSIFICATION_TYPE": "U",
-            "NORAD_CAT_ID": 57697,
-            "ELEMENT_SET_NO": 999,
-            "REV_AT_EPOCH": 44016,
-            "BSTAR": 0.00027278,
-            "MEAN_MOTION_DOT": 0.00015221,
-            "MEAN_MOTION_DDOT": 0
-        },
-        {
-            "OBJECT_NAME": "SOYUZ-MS 24",
-            "OBJECT_ID": "2023-143A",
-            "EPOCH": "2024-02-19T20:19:59.134080",
-            "MEAN_MOTION": 15.50143974,
-            "ECCENTRICITY": 0.0001998,
-            "INCLINATION": 51.6379,
-            "RA_OF_ASC_NODE": 181.827,
-            "ARG_OF_PERICENTER": 289.9742,
-            "MEAN_ANOMALY": 70.1032,
-            "EPHEMERIS_TYPE": 0,
-            "CLASSIFICATION_TYPE": "U",
-            "NORAD_CAT_ID": 57862,
-            "ELEMENT_SET_NO": 999,
-            "REV_AT_EPOCH": 44016,
-            "BSTAR": 0.00027278,
-            "MEAN_MOTION_DOT": 0.00015221,
-            "MEAN_MOTION_DDOT": 0
-        },
-        {
-            "OBJECT_NAME": "SHENZHOU-17 (SZ-17)",
-            "OBJECT_ID": "2023-164A",
-            "EPOCH": "2024-02-19T19:13:31.829376",
-            "MEAN_MOTION": 15.61981406,
-            "ECCENTRICITY": 0.0009271,
-            "INCLINATION": 41.4681,
-            "RA_OF_ASC_NODE": 86.4503,
-            "ARG_OF_PERICENTER": 341.6732,
-            "MEAN_ANOMALY": 18.3772,
-            "EPHEMERIS_TYPE": 0,
-            "CLASSIFICATION_TYPE": "U",
-            "NORAD_CAT_ID": 58146,
-            "ELEMENT_SET_NO": 999,
-            "REV_AT_EPOCH": 16037,
-            "BSTAR": 0.00029376,
-            "MEAN_MOTION_DOT": 0.00026167,
-            "MEAN_MOTION_DDOT": 0
-        },
-        {
-            "OBJECT_NAME": "ISS DEB",
-            "OBJECT_ID": "1998-067WA",
-            "EPOCH": "2024-02-20T01:10:27.844896",
-            "MEAN_MOTION": 15.75668033,
-            "ECCENTRICITY": 0.0006069,
-            "INCLINATION": 51.631,
-            "RA_OF_ASC_NODE": 171.9041,
-            "ARG_OF_PERICENTER": 307.5278,
-            "MEAN_ANOMALY": 52.517,
-            "EPHEMERIS_TYPE": 0,
-            "CLASSIFICATION_TYPE": "U",
-            "NORAD_CAT_ID": 58174,
-            "ELEMENT_SET_NO": 999,
-            "REV_AT_EPOCH": 1833,
-            "BSTAR": 0.0013858,
-            "MEAN_MOTION_DOT": 0.00222124,
-            "MEAN_MOTION_DDOT": 0
-        },
-        {
-            "OBJECT_NAME": "ISS DEB",
-            "OBJECT_ID": "1998-067WC",
-            "EPOCH": "2024-02-19T14:12:18.510624",
-            "MEAN_MOTION": 15.61668265,
-            "ECCENTRICITY": 0.0002546,
-            "INCLINATION": 51.6355,
-            "RA_OF_ASC_NODE": 178.6331,
-            "ARG_OF_PERICENTER": 270.7074,
-            "MEAN_ANOMALY": 89.3629,
-            "EPHEMERIS_TYPE": 0,
-            "CLASSIFICATION_TYPE": "U",
-            "NORAD_CAT_ID": 58229,
-            "ELEMENT_SET_NO": 999,
-            "REV_AT_EPOCH": 1699,
-            "BSTAR": 0.00082976,
-            "MEAN_MOTION_DOT": 0.0007307,
-            "MEAN_MOTION_DDOT": 0
-        },
-        {
-            "OBJECT_NAME": "PROGRESS-MS 25",
-            "OBJECT_ID": "2023-184A",
-            "EPOCH": "2024-02-19T20:19:59.134080",
-            "MEAN_MOTION": 15.50143974,
-            "ECCENTRICITY": 0.0001998,
-            "INCLINATION": 51.6379,
-            "RA_OF_ASC_NODE": 181.827,
-            "ARG_OF_PERICENTER": 289.9742,
-            "MEAN_ANOMALY": 70.1032,
-            "EPHEMERIS_TYPE": 0,
-            "CLASSIFICATION_TYPE": "U",
-            "NORAD_CAT_ID": 58460,
-            "ELEMENT_SET_NO": 999,
-            "REV_AT_EPOCH": 44016,
-            "BSTAR": 0.00027278,
-            "MEAN_MOTION_DOT": 0.00015221,
-            "MEAN_MOTION_DDOT": 0
-        },
-        {
-            "OBJECT_NAME": "BEAK",
-            "OBJECT_ID": "1998-067WD",
-            "EPOCH": "2024-02-19T15:36:09.383904",
-            "MEAN_MOTION": 15.58701592,
-            "ECCENTRICITY": 0.0004563,
-            "INCLINATION": 51.6366,
-            "RA_OF_ASC_NODE": 180.5235,
-            "ARG_OF_PERICENTER": 259.0436,
-            "MEAN_ANOMALY": 101.0043,
-            "EPHEMERIS_TYPE": 0,
-            "CLASSIFICATION_TYPE": "U",
-            "NORAD_CAT_ID": 58612,
-            "ELEMENT_SET_NO": 999,
-            "REV_AT_EPOCH": 992,
-            "BSTAR": 0.00098337,
-            "MEAN_MOTION_DOT": 0.00077418,
-            "MEAN_MOTION_DDOT": 0
-        },
-        {
-            "OBJECT_NAME": "CLARK SAT-1 (AMBITIOUS)",
-            "OBJECT_ID": "1998-067WE",
-            "EPOCH": "2024-02-19T19:14:52.596096",
-            "MEAN_MOTION": 15.65469137,
-            "ECCENTRICITY": 0.0008481,
-            "INCLINATION": 51.6344,
-            "RA_OF_ASC_NODE": 178.5327,
-            "ARG_OF_PERICENTER": 290.8785,
-            "MEAN_ANOMALY": 69.1302,
-            "EPHEMERIS_TYPE": 0,
-            "CLASSIFICATION_TYPE": "U",
-            "NORAD_CAT_ID": 58613,
-            "ELEMENT_SET_NO": 999,
-            "REV_AT_EPOCH": 993,
-            "BSTAR": 0.0016375,
-            "MEAN_MOTION_DOT": 0.0017038,
-            "MEAN_MOTION_DDOT": 0
-        },
-        {
-            "OBJECT_NAME": "TIANZHOU-7",
-            "OBJECT_ID": "2024-013A",
-            "EPOCH": "2024-02-19T19:13:31.829376",
-            "MEAN_MOTION": 15.61981406,
-            "ECCENTRICITY": 0.0009271,
-            "INCLINATION": 41.4681,
-            "RA_OF_ASC_NODE": 86.4503,
-            "ARG_OF_PERICENTER": 341.6732,
-            "MEAN_ANOMALY": 18.3772,
-            "EPHEMERIS_TYPE": 0,
-            "CLASSIFICATION_TYPE": "U",
-            "NORAD_CAT_ID": 58811,
-            "ELEMENT_SET_NO": 999,
-            "REV_AT_EPOCH": 16037,
-            "BSTAR": 0.00029376,
-            "MEAN_MOTION_DOT": 0.00026167,
-            "MEAN_MOTION_DDOT": 0
-        },
-        {
-            "OBJECT_NAME": "CYGNUS NG-20",
-            "OBJECT_ID": "2024-021A",
-            "EPOCH": "2024-02-19T20:19:59.134080",
-            "MEAN_MOTION": 15.50143974,
-            "ECCENTRICITY": 0.0001998,
-            "INCLINATION": 51.6379,
-            "RA_OF_ASC_NODE": 181.827,
-            "ARG_OF_PERICENTER": 289.9742,
-            "MEAN_ANOMALY": 70.1032,
-            "EPHEMERIS_TYPE": 0,
-            "CLASSIFICATION_TYPE": "U",
-            "NORAD_CAT_ID": 58898,
-            "ELEMENT_SET_NO": 999,
-            "REV_AT_EPOCH": 44016,
-            "BSTAR": 0.00027278,
-            "MEAN_MOTION_DOT": 0.00015221,
-            "MEAN_MOTION_DDOT": 0
-        },
-        {
-            "OBJECT_NAME": "PROGRESS-MS 26",
-            "OBJECT_ID": "2024-029A",
-            "EPOCH": "2024-02-19T14:30:58.479264",
-            "MEAN_MOTION": 15.50137446,
-            "ECCENTRICITY": 0.0001899,
-            "INCLINATION": 51.6401,
-            "RA_OF_ASC_NODE": 183.0254,
-            "ARG_OF_PERICENTER": 288.3931,
-            "MEAN_ANOMALY": 158.2498,
-            "EPHEMERIS_TYPE": 0,
-            "CLASSIFICATION_TYPE": "U",
-            "NORAD_CAT_ID": 58961,
-            "ELEMENT_SET_NO": 999,
-            "REV_AT_EPOCH": 44016,
-            "BSTAR": 0.00030539,
-            "MEAN_MOTION_DOT": 0.00017095,
-            "MEAN_MOTION_DDOT": 0
+let cache = [];
+
+let isRequesting = false;
+
+function waitForRequestToFinish() {
+    return new Promise(resolve => {
+        const checkInterval = setInterval(() => {
+            if (!isRequesting) {
+                clearInterval(checkInterval);
+                resolve();
+            }
+        }, 100);
+    });
+}
+
+app.get("/donnees/:req", async (req, res) => {
+    const cachedData = cache.find(item => item.info.satid === req.params.req);
+    if (cachedData) {
+        const secondsPassed = Math.floor((new Date().getTime() - cachedData.info.timestamp) / 1000);
+        let cached = JSON.parse(JSON.stringify(cachedData));
+        cached.positions = cachedData.positions.slice(secondsPassed, cachedData.positions.length-1);
+        console.log("SPLICE EXISTING DATA " + secondsPassed);
+
+        // If the data is older than 295 seconds, delete it and request new data
+        if (secondsPassed > 295) {
+            console.log("DELETING");
+            cache = cache.filter(item => item.info.satid !== req.params.req);
+            await waitForRequestToFinish();
+            isRequesting = true;
+            await fetchData(req.params.req);
+            isRequesting = false;
+            console.log("SENDING RESPONSE 3");
+            res.json(cache.find(item => item.info.satid === req.params.req));
         }
-    ])
+        else {
+            console.log("SENDING RESPONSE 1");
+            res.json(cached);
+        }
+    }
+    else {
+        console.log("NEW REQUEST");
+        await waitForRequestToFinish();
+        isRequesting = true;
+        await fetchData(req.params.req);
+        isRequesting = false;
+        console.log("SENDING RESPONSE 2");
+        res.json(cache.find(item => item.info.satid === req.params.req));
+    }
+});
+
+async function fetchData(req) {
+    try {
+        const response = await axios.get(`https://api.n2yo.com/rest/v1/satellite/positions/${req}/0/0/0/300/&apiKey=Q95HV2-VUCS8A-YCRKGZ-571M`);
+        const positions = response.data.positions;
+        const latitudes = positions.map(position => position.satlatitude);
+        const longitudes = positions.map(position => position.satlongitude);
+        const timestamp = new Date().getTime();
+        const satelliteName = response.data.info.satname;
+
+
+
+        const positionsArray = latitudes.map((lat, index) => {
+            return {
+                satlatitude: lat,
+                satlongitude: longitudes[index]
+            };
+        });
+
+        cache.push({
+            info: {
+                satname: satelliteName,
+                satid: req,
+                timestamp: timestamp
+            },
+            positions: positionsArray
+        });
+
+    } catch (error) {
+        console.log("ERREUR")
+        console.error(error);
+    } finally {
+        isRequesting = false;
+        console.log("FINISHED");
+    }
+}
+
+app.get("/infos/:req", async (req, res) => {
+    try {
+        const response = await axios.get(`https://db.satnogs.org/api/satellites/${req.params.req}/?format=json`)
+        res.json(response.data)
+    } catch (error) {res.json({name: ""})}
+});
+
+app.get("/satellite/:id", async (req, res) => {
+    try {
+        const response = await axios.get(`https://db.satnogs.org/satellite/${req.params.id}`);
+        res.send(response.data);
+    } catch (error) {
+        res.send({name: ""});
+    }
 });
 
 app.listen(port, () => {

@@ -18,12 +18,6 @@ import { FooterComponent } from "./components/footer/footer.component";
     declarations: [
     ],
     imports: [
-        BrowserModule,
-        HttpClientModule,
-        RouterModule.forRoot(routes),
-        HeaderComponent,
-        GoogleMapsModule,
-        FooterComponent
     ],
     providers: [ApiService],
 })

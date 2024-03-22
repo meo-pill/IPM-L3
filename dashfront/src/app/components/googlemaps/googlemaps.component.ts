@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 
 let map: google.maps.Map, infoWindow: google.maps.InfoWindow;
 
-let positions: Observable<any> | any;
+let positions$: Observable<any> | any;
 
 const loader = new Loader({
   apiKey: "AIzaSyD4FY5MdRbUhjsHQDETMaQ_gX3T0tADyCE",
@@ -98,10 +98,10 @@ function initMap() {
       icon: imageSatellite,
     });
 
-    positions.subscribe((value: { satlatitude: number | google.maps.LatLng | google.maps.LatLngLiteral; satlongitude: number | boolean | null | undefined; }) => {
-      latlng = new google.maps.LatLng(value.satlatitude, value.satlongitude);
-      marker.setPosition(latlng);
-    })
+
+    positions$
+    //latlng = new google.maps.LatLng(value.satlatitude, value.satlongitude);
+    //marker.setPosition(latlng);
 
   });
 }
@@ -128,9 +128,9 @@ export class GooglemapsComponent implements OnInit {
   constructor(private mapService: MapService) { }
 
   ngOnInit(): void {
-    positions = this.mapService.currentPosition;
-    console.log(positions);
-    positions.subscribe((value: any) => console.log(value));
+    positions$ = this.mapService.currentPosition;
+    console.log(positions$);
+    positions$.subscribe((value: any) => console.log(value));
     initMap();
   }
 }

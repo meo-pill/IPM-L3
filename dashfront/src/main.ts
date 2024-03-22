@@ -7,6 +7,7 @@ import { FooterComponent } from './app/components/footer/footer.component';
 
 bootstrapApplication(GooglemapsComponent, appConfig)
   .catch((err) => console.error(err));
+
 bootstrapApplication(SelectSatellitesComponent, appConfig)
   .catch((err) => console.error(err));
 

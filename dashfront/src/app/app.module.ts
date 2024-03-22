@@ -3,7 +3,6 @@ import { NgModule } from "@angular/core";
 import { routes } from './app.routes';
 
 import { ApiService } from "./services/api.service";
-import { HeaderComponent } from "./components/header/header.component";
 import { HttpClientModule } from "@angular/common/http";
 import { RouterModule } from "@angular/router";
 import { GooglemapsComponent } from "./components/googlemaps/googlemaps.component";
@@ -22,7 +21,6 @@ import { FooterComponent } from "./components/footer/footer.component";
       RouterModule,
       GoogleMapsModule,
       GooglemapsComponent,
-      HeaderComponent,
       FooterComponent,
       SelectSatellitesComponent],
     providers: [ApiService],

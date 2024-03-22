@@ -21,19 +21,10 @@ export class SelectSatellitesComponent implements OnInit {
   searchTerm: string = '';
   searchResult: Array<string> = [];
   description: string = '';
-  descInfos: { [key: string]: string } = {
-    // 'name': '',
-    // 'img': '',
-    //
-    // 'satId': '',
-    // 'noradId': '',
-    //
-    // 'desc': '',
-    // 'names': '',
-    // 'site': '',
-    // 'origin': '',
-    // 'launch': '',
-  };
+  descInfos: { [key: string]: string } = {};
+
+  cacheInfos: any[] = [];
+  cachePos: any[] = [];
 
 
   constructor(private apiService: ApiService, private mapService: MapService) { }
@@ -41,15 +32,19 @@ export class SelectSatellitesComponent implements OnInit {
   ngOnInit(): void {
     this.fetch('25544');
   }
+  
 
   fetch(id: string): void {
-    this.fetchInfos(id);
-    this.fetchPos(id);
+    if (this.cacheInfos.length <= 5) {
+      this.cacheInfos.push(this.fetchInfos(id));
+      this.cachePos.push(this.fetchPos(id));
+    }
+    else alert("Trop de satellites sélectionnés, veuillez en retirer.");
   }
 
 
   // Récupérer les données de N2YO
-  fetchPos(req: string): void {
+  fetchPos(req: string): string {
     let alive = true;
     this.apiService.getPos(req)
 
@@ -61,8 +56,8 @@ export class SelectSatellitesComponent implements OnInit {
 
       // Serveur connecté, récupérer les données
       .subscribe(res => {
-        this.Infos = res;
-        this.positions$ = interval(1000)
+        this.Infos = JSON.parse(JSON.stringify(res));
+        /*        this.positions$ = interval(1000)
 
           // Itérer sur les données récupérées et envoyer la nouvelle ligne chaque seconde
           .pipe(takeWhile(() => alive),
@@ -74,12 +69,13 @@ export class SelectSatellitesComponent implements OnInit {
               }
               return this.Infos.positions[i % this.Infos.positions.length];
             })
-          );
+          );*/
       });
+    return this.Infos;
   }
 
   // Récupérer description & image du satellite
-  fetchInfos(id: string): void {
+  fetchInfos(id: string): { [p: string]: string } {
     this.apiService.getInfos(id)
 
       .pipe(catchError(err => {
@@ -103,6 +99,7 @@ export class SelectSatellitesComponent implements OnInit {
         }
         if (!json['citation'].includes("CITATION NEEDED") && json['citation'] !== "") this.descInfos['description'] = json['citation'];
       });
+    return this.descInfos;
   }
 
   // Rechercher un satellite sur le site du catalogue Celestrak

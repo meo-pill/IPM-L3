@@ -93,7 +93,7 @@ export class SelectSatellitesComponent implements OnInit {
         if (json['name'] != "") {
           this.descInfos['name'] = json['name'];
           if (json['names'] != "") this.descInfos['names'] = json['names'];
-          this.descInfos['img'] = json['image'] == "" ? "src/assets/img/sat_default.png" : 'https://db-satnogs.freetls.fastly.net/media/' + json['image'];
+          this.descInfos['img'] = json['image'] == "" ? "assets/img/sat_default.png" : 'https://db-satnogs.freetls.fastly.net/media/' + json['image'];
           this.descInfos['noradId'] = json['norad_cat_id'];
           this.descInfos['satId'] = json['sat_id'];
           this.descInfos['status'] = json['status'];
@@ -101,17 +101,8 @@ export class SelectSatellitesComponent implements OnInit {
           if (json['countries'] != "") this.descInfos['origin'] = json['countries'];
           if (json['website'] != "") this.descInfos['site'] = json['website'];
         }
-        else alert("Informations du satellite non disponibles.");
+        if (!json['citation'].includes("CITATION NEEDED") && json['citation'] !== "") this.descInfos['description'] = json['citation'];
       });
-
-
-    // Récupérer la description du satellite via scrapping
-    this.apiService.getDesc(this.descInfos['satId'])
-      .subscribe(res => {
-        this.description = res.split('<!-- Satellite Description -->')[1].split('<p>')[1].split('</p>')[0];
-        console.log(this.description);
-      });
-
   }
 
   // Rechercher un satellite sur le site du catalogue Celestrak

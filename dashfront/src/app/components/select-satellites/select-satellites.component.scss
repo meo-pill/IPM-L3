@@ -1,29 +1,27 @@
 .Header {
-    display: flex;
-    justify-content: flex-end;
-    background: black;
-    padding: 1vw;
+  display: flex;
+  justify-content: flex-end;
+  background: black;
+  padding: 1vw;
 }
 
 .Header ul {
-    direction: rtl;
-    display: flex;
-    justify-content: flex-end;
+  direction: rtl;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .Header ul li {
-    list-style-type: none;
-    display: inline;
-    margin-right: 2vw; // Change this value to adjust the spacing
+  list-style-type: none;
+  display: inline;
+  margin-right: 2vw; // Change this value to adjust the spacing
 }
 
 li:hover {
-    font-weight: bold;
-    cursor: pointer;
+  font-weight: bold;
+  cursor: pointer;
 }
 
-table,
-table th,
-table td {
-    border: 0.2vw solid black;
+table, table th, table td{
+  border: 0.2vw solid black;
 }

@@ -1,13 +1,10 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
-
 import { routes } from './app.routes';
-import { AppComponent } from "./app.component";
-import { HeaderComponent } from "./components/header/header.component";
 
+import { ApiService } from "./services/api.service";
 import { HttpClientModule } from "@angular/common/http";
 import { RouterModule } from "@angular/router";
-import { ApiService } from "./services/api.service";
 import { GooglemapsComponent } from "./components/googlemaps/googlemaps.component";
 import { GoogleMapsModule } from "@angular/google-maps";
 import { SelectSatellitesComponent } from "./components/select-satellites/select-satellites.component";
@@ -18,7 +15,14 @@ import { FooterComponent } from "./components/footer/footer.component";
     declarations: [
     ],
     imports: [
-    ],
+      BrowserModule,
+      routes,
+      HttpClientModule,
+      RouterModule,
+      GoogleMapsModule,
+      GooglemapsComponent,
+      FooterComponent,
+      SelectSatellitesComponent],
     providers: [ApiService],
 })
 export class AppModule { }

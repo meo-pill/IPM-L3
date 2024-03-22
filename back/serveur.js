@@ -93,20 +93,24 @@ async function fetchData(req) {
 }
 
 app.get("/infos/:req", async (req, res) => {
+    let infos = {};
+    let desc = "";
+
     try {
         const response = await axios.get(`https://db.satnogs.org/api/satellites/${req.params.req}/?format=json`)
         res.json(response.data)
     } catch (error) { res.json({ name: "" }) }
 });
 
-app.get("/satellite/:id", async (req, res) => {
     try {
-        const response = await axios.get(`https://db.satnogs.org/satellite/${req.params.id}`);
-        res.send(response.data);
-    } catch (error) {
-        res.send({ name: "" });
-    }
+        const response2 = await axios.get(`https://db.satnogs.org/satellite/${req.params.req}`)
+        desc = response2.data.split('<!-- Satellite Description -->')[1].split('<p>')[1].split('</p>')[0]
+    } catch (error) {desc = ""}
+
+    infos.citation = desc
+    res.json(infos)
 });
+
 
 app.listen(port, () => {
     console.log("Serveur ouvert sur le port " + port)

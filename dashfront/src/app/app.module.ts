@@ -26,5 +26,6 @@ import { FooterComponent } from "./components/footer/footer.component";
       FooterComponent,
       SelectSatellitesComponent],
     providers: [ApiService],
+
 })
 export class AppModule { }

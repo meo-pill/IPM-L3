@@ -404,7 +404,9 @@ $general-transition-time: 300ms !default;
 
 @font-face {
   font-family: 'Archivo';
-  src: url('../../../fonts/Archivo-VariableFont_wdth,wght.ttf') format('ttf');
+  src: url('../../../fonts/Archivo-VariableFont_wdth,wght.ttf') format('ttf'),
+      url('../../../fonts/Archivo-Italic-VariableFont_wdth\,wght.ttf') format('ttf'),
+      url('../../../fonts/static/Archivo-Black.ttf') format('ttf');
   font-weight: normal;
   font-style: normal;
 }
@@ -505,7 +507,7 @@ $icon-font-size-sm: 0.6875rem !default;
 $icon-size-sm: 1.875rem !default;
 $icon-font-size-lg: 1.325rem !default;
 $icon-size-lg: 3.7rem !default;
-$icon-size-xl: 5rem !default;
+$icon-size-xl: 8rem !default;
 
 // Tables
 

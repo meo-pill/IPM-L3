@@ -23,4 +23,23 @@
   height: auto;
   max-height: auto;
   max-width: auto;
+}*
+
+#title{
+  color: white;
+  text-align: center;
+  margin: 10vh;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+
+#text-presentation{
+  color: white;
+  text-align: center;
+  text-wrap: wrap;
+  margin: 5vh;
+  font-size: 1em;
+  text-shadow: 1px 1px 0 black, -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black; // Simule un contour
+
 }

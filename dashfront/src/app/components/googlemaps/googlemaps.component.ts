@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 
 let map: google.maps.Map, infoWindow: google.maps.InfoWindow;
 
-let positions: Observable<any> | any;
+let positions$: Observable<any> | any;
 
 const loader = new Loader({
   apiKey: "AIzaSyD4FY5MdRbUhjsHQDETMaQ_gX3T0tADyCE",
@@ -98,10 +98,23 @@ function initMap() {
       icon: imageSatellite,
     });
 
-    positions.subscribe((value: { satlatitude: number | google.maps.LatLng | google.maps.LatLngLiteral; satlongitude: number | boolean | null | undefined; }) => {
-      latlng = new google.maps.LatLng(value.satlatitude, value.satlongitude);
-      marker.setPosition(latlng);
-    })
+    positions$ = interval(1000)
+      // Itérer sur les données récupérées et envoyer la nouvelle ligne chaque seconde
+      .pipe(takeWhile(() => alive),
+        map(i => {
+          // Fin de boucle : recommencer le procédé
+          if (i % this.Infos.positions.length === this.Infos.positions.length - 1) {
+            alive = false;
+            return this.fetchPos(req);
+          }
+          return this.Infos.positions[i % this.Infos.positions.length];
+        })
+      );
+
+    positions.subscribe((value: any) => console.log(value))
+
+    //latlng = new google.maps.LatLng(value.satlatitude, value.satlongitude);
+    //marker.setPosition(latlng);
 
   });
 }

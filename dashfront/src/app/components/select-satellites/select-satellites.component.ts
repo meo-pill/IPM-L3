@@ -4,6 +4,7 @@ import { CommonModule } from "@angular/common";
 import { delay, interval, Observable, of, retry, retryWhen, switchMap, takeWhile, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { FormsModule } from "@angular/forms";
+import { MapService } from '../../services/map.service';
 
 @Component({
   selector: 'app-select-satellites',
@@ -35,7 +36,7 @@ export class SelectSatellitesComponent implements OnInit {
   };
 
 
-  constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService, private mapService: MapService) { }
 
   ngOnInit(): void {
     this.fetch('25544');

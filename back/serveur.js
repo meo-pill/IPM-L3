@@ -26,7 +26,7 @@ app.get("/donnees/:req", async (req, res) => {
     if (cachedData) {
         const secondsPassed = Math.floor((new Date().getTime() - cachedData.info.timestamp) / 1000);
         let cached = JSON.parse(JSON.stringify(cachedData));
-        cached.positions = cachedData.positions.slice(secondsPassed, cachedData.positions.length-1);
+        cached.positions = cachedData.positions.slice(secondsPassed, cachedData.positions.length - 1);
         console.log("SPLICE EXISTING DATA " + secondsPassed);
 
         // If the data is older than 295 seconds, delete it and request new data
@@ -96,7 +96,7 @@ app.get("/infos/:req", async (req, res) => {
     try {
         const response = await axios.get(`https://db.satnogs.org/api/satellites/${req.params.req}/?format=json`)
         res.json(response.data)
-    } catch (error) {res.json({name: ""})}
+    } catch (error) { res.json({ name: "" }) }
 });
 
 app.get("/satellite/:id", async (req, res) => {
@@ -104,7 +104,7 @@ app.get("/satellite/:id", async (req, res) => {
         const response = await axios.get(`https://db.satnogs.org/satellite/${req.params.id}`);
         res.send(response.data);
     } catch (error) {
-        res.send({name: ""});
+        res.send({ name: "" });
     }
 });
 

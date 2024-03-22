@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit} from '@angular/core';
 import { ApiService } from "../../services/api.service";
 import { CommonModule } from "@angular/common";
 import { delay, interval, Observable, of, retry, retryWhen, switchMap, takeWhile, throwError } from 'rxjs';
@@ -16,6 +16,7 @@ import { MapService } from '../../services/map.service';
 })
 
 export class SelectSatellitesComponent implements OnInit {
+  @Input() fetchNewPos: EventEmitter<void> = new EventEmitter<void>();
   Infos: any = []; // Première requête à celestrak
   positions$: Observable<any> | undefined; // Itérateur sur les positions du satellite
   searchTerm: string = '';
@@ -31,6 +32,14 @@ export class SelectSatellitesComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetch('25544');
+
+    this.fetchNewPos.subscribe(() => {
+      for (let i = 0; i < this.cachePos.length; i++) {
+        let id = this.cachePos[i].info.satId;
+        this.cachePos[i] = this.fetchPos(id)
+      }
+      this.mapService.updatePos(this.cachePos);
+    });
   }
 
   fetch(id: string): void {
@@ -44,7 +53,6 @@ export class SelectSatellitesComponent implements OnInit {
 
   // Récupérer les données de N2YO
   fetchPos(req: string): string {
-    let alive = true;
     this.apiService.getPos(req)
 
       // Serveur déconnecté, réessayer la connexion
@@ -56,19 +64,6 @@ export class SelectSatellitesComponent implements OnInit {
       // Serveur connecté, récupérer les données
       .subscribe(res => {
         this.Infos = JSON.parse(JSON.stringify(res));
-        /*        this.positions$ = interval(1000)
-
-          // Itérer sur les données récupérées et envoyer la nouvelle ligne chaque seconde
-          .pipe(takeWhile(() => alive),
-            map(i => {
-              // Fin de boucle : recommencer le procédé
-              if (i % this.Infos.positions.length === this.Infos.positions.length - 1) {
-                alive = false;
-                return this.fetchPos(req);
-              }
-              return this.Infos.positions[i % this.Infos.positions.length];
-            })
-          );*/
       });
     return this.Infos;
   }

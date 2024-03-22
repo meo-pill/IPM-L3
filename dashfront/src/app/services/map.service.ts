@@ -5,11 +5,12 @@ import { BehaviorSubject, Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class MapService {
-  currentPosition = new Observable<any>();
+  private source = new BehaviorSubject('start');
+  currentPosition = this.source.asObservable();
 
   constructor() { }
 
-  changePosition(position: Observable<any>) {
-    this.currentPosition = position
+  changePosition(nouvellePosition: Observable<any>) {
+    this.currentPosition = nouvellePosition;
   }
 }

@@ -32,7 +32,6 @@ export class SelectSatellitesComponent implements OnInit {
   ngOnInit(): void {
     this.fetch('25544');
   }
-  
 
   fetch(id: string): void {
     if (this.cacheInfos.length <= 5) {

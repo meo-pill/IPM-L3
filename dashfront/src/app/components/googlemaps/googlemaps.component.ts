@@ -2,12 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { Loader } from '@googlemaps/js-api-loader';
 import { MapService } from '../../services/map.service';
 import { Observable } from 'rxjs';
+import { delay, interval, of, retry, retryWhen, switchMap, takeWhile, throwError } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 let map: google.maps.Map, infoWindow: google.maps.InfoWindow;
 
-let positions$: Observable<any> | any;
+let Infos: never[] = [];
 
 const loader = new Loader({
   apiKey: "AIzaSyD4FY5MdRbUhjsHQDETMaQ_gX3T0tADyCE",
@@ -41,6 +42,9 @@ let mapOptions = {
 
 function initMap() {
   loader.load().then((google) => {
+    // Observable pour iteration
+    let positions$: Observable<any> | any;
+
     // Latitude et Longitude du satellite
     var latlng = new google.maps.LatLng(0, 0);
 
@@ -98,8 +102,19 @@ function initMap() {
       icon: imageSatellite,
     });
 
+    positions$ = interval(1000)
+      // Itérer sur les données récupérées et envoyer la nouvelle ligne chaque seconde
+      .pipe(takeWhile(() => alive),
+        map(i => {
+          // Fin de boucle : recommencer le procédé
+          if (i % this.Infos.positions.length === Infos.positions.length - 1) {
+            alive = false;
+            return this.fetchPos(req);
+          }
+          return this.Infos.positions[i % this.Infos.positions.length];
+        })
+      );
 
-    positions$
     //latlng = new google.maps.LatLng(value.satlatitude, value.satlongitude);
     //marker.setPosition(latlng);
 
@@ -125,12 +140,12 @@ window.initMap = initMap;
 
 export class GooglemapsComponent implements OnInit {
 
+
+
   constructor(private mapService: MapService) { }
 
   ngOnInit(): void {
-    positions$ = this.mapService.currentPosition;
-    console.log(positions$);
-    positions$.subscribe((value: any) => console.log(value));
+    this.Infos = this.mapService.Infos;
     initMap();
   }
 }

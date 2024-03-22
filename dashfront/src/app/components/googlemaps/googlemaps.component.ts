@@ -98,21 +98,8 @@ function initMap() {
       icon: imageSatellite,
     });
 
-    positions$ = interval(1000)
-      // Itérer sur les données récupérées et envoyer la nouvelle ligne chaque seconde
-      .pipe(takeWhile(() => alive),
-        map(i => {
-          // Fin de boucle : recommencer le procédé
-          if (i % this.Infos.positions.length === this.Infos.positions.length - 1) {
-            alive = false;
-            return this.fetchPos(req);
-          }
-          return this.Infos.positions[i % this.Infos.positions.length];
-        })
-      );
 
-    positions.subscribe((value: any) => console.log(value))
-
+    positions$
     //latlng = new google.maps.LatLng(value.satlatitude, value.satlongitude);
     //marker.setPosition(latlng);
 
@@ -141,9 +128,9 @@ export class GooglemapsComponent implements OnInit {
   constructor(private mapService: MapService) { }
 
   ngOnInit(): void {
-    positions = this.mapService.currentPosition;
-    console.log(positions);
-    positions.subscribe((value: any) => console.log(value));
+    positions$ = this.mapService.currentPosition;
+    console.log(positions$);
+    positions$.subscribe((value: any) => console.log(value));
     initMap();
   }
 }

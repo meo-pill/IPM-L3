@@ -1,7 +1,7 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';
 
-import { HeaderComponent } from './app/header/header.component';
+import { HeaderComponent } from './app/components/header/header.component';
 import { GooglemapsComponent } from './app/components/googlemaps/googlemaps.component';
 import { SelectSatellitesComponent } from './app/components/select-satellites/select-satellites.component';
 import { FooterComponent } from './app/components/footer/footer.component';

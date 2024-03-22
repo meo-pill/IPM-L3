@@ -154,8 +154,8 @@ export class GooglemapsComponent implements OnInit {
         if (Infos.length > 0) {
           initMap(this.fetchNewPos);
         }
-        console.log(Infos);
       });
+      console.log(Infos);
     } catch (error) {
       console.error(error);
     }

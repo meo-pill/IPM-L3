@@ -32,6 +32,7 @@ export class SelectSatellitesComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetch('25544');
+    this.mapService.updatePos(this.cachePos);
 
     this.fetchNewPos.subscribe(() => {
       for (let i = 0; i < this.cachePos.length; i++) {

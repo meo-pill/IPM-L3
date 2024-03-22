@@ -3,7 +3,7 @@ import { ApiService } from "../../services/api.service";
 import { CommonModule } from "@angular/common";
 import { delay, interval, Observable, of, retry, retryWhen, switchMap, takeWhile, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { FormsModule } from "@angular/forms";
+import { FormsModule, isFormArray } from "@angular/forms";
 import { MapService } from '../../services/map.service';
 
 @Component({
@@ -62,6 +62,9 @@ export class SelectSatellitesComponent implements OnInit {
       // Serveur connecté, récupérer les données
       .subscribe(res => {
         this.Infos = res;
+
+        this.mapService.changePosition(this.Infos);
+
         this.positions$ = interval(1000)
 
           // Itérer sur les données récupérées et envoyer la nouvelle ligne chaque seconde

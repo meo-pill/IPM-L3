@@ -396,8 +396,15 @@ $general-transition-time: 300ms !default;
 
 // Fonts
 
-$font-family-base: "Poppins", sans-serif !default;
-$font-family-alt: "Poppins", sans-serif !default;
+@font-face {
+  font-family: 'Archivo';
+  src: url('../../../fonts/Archivo-VariableFont_wdth,wght.ttf') format('ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+$font-family-base: "Archivo";
+$font-family-alt: "Archivo";
 
 $font-size-dash: 0.875rem !default;
 

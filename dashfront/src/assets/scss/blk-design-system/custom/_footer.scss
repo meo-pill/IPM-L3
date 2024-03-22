@@ -1,9 +1,9 @@
 .footer {
   padding: 50px 0;
-  border-top: 2px solid #979FCB;
+  border-top: 2px solid $jaune-orange;
   background: radial-gradient(
     ellipse at bottom,
-    #384177 30%,
+    $bleu-fonce 30%,
     $background-black 80%
   );
 

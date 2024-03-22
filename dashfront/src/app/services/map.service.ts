@@ -9,7 +9,11 @@ export class MapService {
 
   constructor() { }
 
-  changePosition(newInfos: any) {
-    this.Infos = newInfos;
+  updatePos(info: any[]){
+    this.Infos = info;
+  }
+
+  getPos(): any[] {
+    return this.Infos;
   }
 }

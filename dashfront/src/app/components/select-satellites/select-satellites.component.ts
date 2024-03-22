@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit} from '@angular/core';
 import { ApiService } from "../../services/api.service";
 import { CommonModule } from "@angular/common";
 import { delay, interval, Observable, of, retry, retryWhen, switchMap, takeWhile, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { FormsModule, isFormArray } from "@angular/forms";
+import { FormsModule } from "@angular/forms";
 import { MapService } from '../../services/map.service';
 
 @Component({
@@ -16,41 +16,43 @@ import { MapService } from '../../services/map.service';
 })
 
 export class SelectSatellitesComponent implements OnInit {
+  @Input() fetchNewPos: EventEmitter<void> = new EventEmitter<void>();
   Infos: any = []; // Première requête à celestrak
   positions$: Observable<any> | undefined; // Itérateur sur les positions du satellite
   searchTerm: string = '';
   searchResult: Array<string> = [];
   description: string = '';
-  descInfos: { [key: string]: string } = {
-    // 'name': '',
-    // 'img': '',
-    //
-    // 'satId': '',
-    // 'noradId': '',
-    //
-    // 'desc': '',
-    // 'names': '',
-    // 'site': '',
-    // 'origin': '',
-    // 'launch': '',
-  };
+  descInfos: { [key: string]: string } = {};
+
+  cacheInfos: any[] = [];
+  cachePos: any[] = [];
 
 
   constructor(private apiService: ApiService, private mapService: MapService) { }
 
   ngOnInit(): void {
     this.fetch('25544');
+
+    this.fetchNewPos.subscribe(() => {
+      for (let i = 0; i < this.cachePos.length; i++) {
+        let id = this.cachePos[i].info.satId;
+        this.cachePos[i] = this.fetchPos(id)
+      }
+      this.mapService.updatePos(this.cachePos);
+    });
   }
 
   fetch(id: string): void {
-    this.fetchInfos(id);
-    this.fetchPos(id);
+    if (this.cacheInfos.length <= 5) {
+      this.cacheInfos.push(this.fetchInfos(id));
+      this.cachePos.push(this.fetchPos(id));
+    }
+    else alert("Trop de satellites sélectionnés, veuillez en retirer.");
   }
 
 
   // Récupérer les données de N2YO
-  fetchPos(req: string): void {
-    let alive = true;
+  fetchPos(req: string): string {
     this.apiService.getPos(req)
 
       // Serveur déconnecté, réessayer la connexion
@@ -61,28 +63,13 @@ export class SelectSatellitesComponent implements OnInit {
 
       // Serveur connecté, récupérer les données
       .subscribe(res => {
-        this.Infos = res;
-
-        this.mapService.changePosition(this.Infos);
-
-        this.positions$ = interval(1000)
-
-          // Itérer sur les données récupérées et envoyer la nouvelle ligne chaque seconde
-          .pipe(takeWhile(() => alive),
-            map(i => {
-              // Fin de boucle : recommencer le procédé
-              if (i % this.Infos.positions.length === this.Infos.positions.length - 1) {
-                alive = false;
-                return this.fetchPos(req);
-              }
-              return this.Infos.positions[i % this.Infos.positions.length];
-            })
-          );
+        this.Infos = JSON.parse(JSON.stringify(res));
       });
+    return this.Infos;
   }
 
   // Récupérer description & image du satellite
-  fetchInfos(id: string): void {
+  fetchInfos(id: string): { [p: string]: string } {
     this.apiService.getInfos(id)
 
       .pipe(catchError(err => {
@@ -106,6 +93,7 @@ export class SelectSatellitesComponent implements OnInit {
         }
         if (!json['citation'].includes("CITATION NEEDED") && json['citation'] !== "") this.descInfos['description'] = json['citation'];
       });
+    return this.descInfos;
   }
 
   // Rechercher un satellite sur le site du catalogue Celestrak

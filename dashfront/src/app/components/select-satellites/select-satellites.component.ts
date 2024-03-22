@@ -17,7 +17,7 @@ import { MapService } from '../../services/map.service';
 
 export class SelectSatellitesComponent implements OnInit {
   @Input() fetchNewPos: EventEmitter<void> = new EventEmitter<void>();
-  Infos: any = []; // Première requête à celestrak
+  Pos: any = []; // Première requête à celestrak
   positions$: Observable<any> | undefined; // Itérateur sur les positions du satellite
   searchTerm: string = '';
   searchResult: Array<string> = [];
@@ -33,6 +33,7 @@ export class SelectSatellitesComponent implements OnInit {
   ngOnInit(): void {
     this.fetch('25544');
     this.mapService.updatePos(this.cachePos);
+    console.log(this.mapService.getPos());
 
     this.fetchNewPos.subscribe(() => {
       for (let i = 0; i < this.cachePos.length; i++) {
@@ -44,41 +45,46 @@ export class SelectSatellitesComponent implements OnInit {
   }
 
   fetch(id: string): void {
-    if (this.cacheInfos.length <= 5) {
-      this.cacheInfos.push(this.fetchInfos(id));
-      this.cachePos.push(this.fetchPos(id));
+    if (this.cachePos.length <= 5) {
+      this.fetchInfos(id).subscribe(info => {
+        this.cacheInfos.push(info);
+      });
+      this.fetchPos(id).subscribe(pos => {
+        this.cachePos.push(pos);
+        this.fetchNewPos.emit();
+      });
+    } else {
+      alert("Trop de satellites sélectionnés, veuillez en retirer.");
     }
-    else alert("Trop de satellites sélectionnés, veuillez en retirer.");
   }
 
 
   // Récupérer les données de N2YO
-  fetchPos(req: string): string {
-    this.apiService.getPos(req)
-
-      // Serveur déconnecté, réessayer la connexion
-      .pipe(catchError(err => {
-        console.error('Server connexion unestablished.\n Attempting to reconnect ...');
-        return of(err).pipe(delay(5000), switchMap(() => throwError(err))); // Throw the error after the delay
-      }), retry())
-
-      // Serveur connecté, récupérer les données
-      .subscribe(res => {
-        this.Infos = JSON.parse(JSON.stringify(res));
-      });
-    return this.Infos;
+  fetchPos(req: string): Observable<any> {
+    return this.apiService.getPos(req)
+      .pipe(
+        catchError(err => {
+          console.error('Server connexion unestablished.\n Attempting to reconnect ...');
+          return of(err).pipe(delay(5000), switchMap(() => throwError(err))); // Throw the error after the delay
+        }),
+        retry(),
+        map(res => {
+          this.Pos = JSON.parse(JSON.stringify(res));
+          return this.Pos;
+        })
+      );
   }
 
   // Récupérer description & image du satellite
-  fetchInfos(id: string): { [p: string]: string } {
-    this.apiService.getInfos(id)
-
-      .pipe(catchError(err => {
+  fetchInfos(id: string): Observable<{ [p: string]: string }> {
+  return this.apiService.getInfos(id)
+    .pipe(
+      catchError(err => {
         console.error();
         return of(err).pipe(delay(5000), switchMap(() => throwError(err))); // Throw the error after the delay
-      }), retry())
-
-      .subscribe(res => {
+      }),
+      retry(),
+      map(res => {
         let json = JSON.parse(JSON.stringify(res));
         this.descInfos = {};
         if (json['name'] != "") {
@@ -93,9 +99,10 @@ export class SelectSatellitesComponent implements OnInit {
           if (json['website'] != "") this.descInfos['site'] = json['website'];
         }
         if (!json['citation'].includes("CITATION NEEDED") && json['citation'] !== "") this.descInfos['description'] = json['citation'];
-      });
-    return this.descInfos;
-  }
+        return this.descInfos;
+      })
+    );
+}
 
   // Rechercher un satellite sur le site du catalogue Celestrak
   search(): void {

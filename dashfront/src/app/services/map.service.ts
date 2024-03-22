@@ -11,9 +11,11 @@ export class MapService {
 
   updatePos(info: any[]){
     this.Infos = info;
+    console.log(this.Infos);
   }
 
   getPos(): any[] {
+    console.log(this.Infos);
     return this.Infos;
   }
 }

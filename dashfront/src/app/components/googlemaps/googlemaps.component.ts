@@ -87,6 +87,7 @@ function initMap(fetchNewInfos: EventEmitter<void>) {
 
     positions$ = interval(1000)
       .pipe(map(index => {
+        console.log(Infos);
         for (let i = 0; i < Infos.length; i++) {
           if (index % Infos[i].position.length === Infos[i].position.length - 1) {
             fetchNewInfos.emit();
@@ -131,7 +132,7 @@ export class GooglemapsComponent implements OnInit {
     const interval = 100;
     return new Promise((resolve, reject) => {
       const timer = setInterval(() => {
-        if (this.mapService.getPos() !== null) {
+        if (this.mapService.getPos().length > 0) {
           clearInterval(timer);
           resolve(true);
         }
@@ -143,21 +144,18 @@ export class GooglemapsComponent implements OnInit {
       }, interval);
     });
   }
-
-  async ngOnInit(): Promise<void> {
-    try {
+async ngOnInit(): Promise<void> {
+  try {
+    this.fetchNewPos.subscribe(async () => {
       await this.waitInfos();
       Infos = this.mapService.getPos();
-      initMap(this.fetchNewPos);
-      this.fetchNewPos.subscribe(() => {
-        Infos = this.mapService.getPos();
-        if (Infos.length > 0) {
-          initMap(this.fetchNewPos);
-        }
-      });
-      console.log(Infos);
-    } catch (error) {
-      console.error(error);
-    }
+      if (Infos.length > 0) {
+        initMap(this.fetchNewPos);
+      }
+    });
+    this.fetchNewPos.emit();
+  } catch (error) {
+    console.error(error);
   }
+}
 }

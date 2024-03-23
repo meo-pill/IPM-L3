@@ -404,9 +404,8 @@ $general-transition-time: 300ms !default;
 
 @font-face {
   font-family: 'Archivo';
-  src: url('../../../fonts/Archivo-VariableFont_wdth,wght.ttf') format('ttf'),
-      url('../../../fonts/Archivo-Italic-VariableFont_wdth\,wght.ttf') format('ttf'),
-      url('../../../fonts/static/Archivo-Black.ttf') format('ttf');
+  src: url('../../../fonts/Archivo-Medium.woff') format('woff'),
+        url('../../../fonts/Archivo-Regular.woff'), format('woff');
   font-weight: normal;
   font-style: normal;
 }

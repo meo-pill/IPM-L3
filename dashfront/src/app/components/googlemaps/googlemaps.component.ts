@@ -87,7 +87,6 @@ function initMap(fetchNewInfos: EventEmitter<void>) {
 
     positions$ = interval(1000)
       .pipe(map(index => {
-        console.log(Infos);
         for (let i = 0; i < Infos.length; i++) {
           if (index % Infos[i].position.length === Infos[i].position.length - 1) {
             fetchNewInfos.emit();

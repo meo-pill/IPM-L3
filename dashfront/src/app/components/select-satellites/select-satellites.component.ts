@@ -30,33 +30,47 @@ export class SelectSatellitesComponent implements OnInit {
 
   constructor(private apiService: ApiService, private mapService: MapService) { }
 
-  ngOnInit(): void {
-    this.fetch('25544');
-    this.mapService.updatePos(this.cachePos);
-    console.log(this.mapService.getPos());
+ngOnInit(): void {
+  this.fetch('25544');
+  this.mapService.updatePos(this.cachePos);
 
-    this.fetchNewPos.subscribe(() => {
-      for (let i = 0; i < this.cachePos.length; i++) {
-        let id = this.cachePos[i].info.satId;
-        this.cachePos[i] = this.fetchPos(id)
+  this.fetchNewPos.subscribe(async () => {
+    console.log('fetchNewPos')
+    for (let i = 0; i < this.cachePos.length; i++) {
+      let id = this.cachePos[i].info.satId;
+      const pos = await this.fetchPos(id).toPromise();
+      if (pos && !this.cachePos.some(cachedPos => cachedPos.info.satid === pos['info'].satid)) {
+        this.cachePos[i] = pos;
       }
-      this.mapService.updatePos(this.cachePos);
-    });
-  }
-
-  fetch(id: string): void {
-    if (this.cachePos.length <= 5) {
-      this.fetchInfos(id).subscribe(info => {
-        this.cacheInfos.push(info);
-      });
-      this.fetchPos(id).subscribe(pos => {
-        this.cachePos.push(pos);
-        this.fetchNewPos.emit();
-      });
-    } else {
-      alert("Trop de satellites sélectionnés, veuillez en retirer.");
     }
+    console.log('fetchNewPos end')
+    this.mapService.updatePos(this.cachePos);
+    console.log(this.mapService.getPos())
+  });
+}
+
+async fetch(id: string): Promise<void> {
+  try {
+    const info = await this.fetchInfos(id).toPromise();
+    if (info && !this.cacheInfos.some(cachedInfo => cachedInfo.norad_cat_id === info['noradId'])) {
+      this.cacheInfos.push(info);
+    }
+
+    const pos = await this.fetchPos(id).toPromise();
+    if (pos && !this.cachePos.some(cachedPos => cachedPos.info.satid === pos['info'].satid)) {
+      this.cachePos.push(pos);
+    }
+
+    this.fetchNewPos.emit();
+
+    if (this.cachePos.length > 5) {
+      this.cachePos.shift();
+      this.cacheInfos.shift();
+    }
+  } catch (error) {
+    console.error(error);
   }
+}
 
 
   // Récupérer les données de N2YO
@@ -76,17 +90,18 @@ export class SelectSatellitesComponent implements OnInit {
   }
 
   // Récupérer description & image du satellite
+
   fetchInfos(id: string): Observable<{ [p: string]: string }> {
-  return this.apiService.getInfos(id)
-    .pipe(
-      catchError(err => {
-        console.error();
-        return of(err).pipe(delay(5000), switchMap(() => throwError(err))); // Throw the error after the delay
-      }),
-      retry(),
-      map(res => {
-        let json = JSON.parse(JSON.stringify(res));
-        this.descInfos = {};
+    return this.apiService.getInfos(id)
+      .pipe(
+        catchError(err => {
+          console.error();
+          return of(err).pipe(delay(5000), switchMap(() => throwError(err))); // Throw the error after the delay
+        }),
+        retry(),
+        map(res => {
+          let json = JSON.parse(JSON.stringify(res));
+          this.descInfos = {};
         if (json['name'] != "") {
           this.descInfos['name'] = json['name'];
           if (json['names'] != "") this.descInfos['names'] = json['names'];
@@ -99,10 +114,10 @@ export class SelectSatellitesComponent implements OnInit {
           if (json['website'] != "") this.descInfos['site'] = json['website'];
         }
         if (!json['citation'].includes("CITATION NEEDED") && json['citation'] !== "") this.descInfos['description'] = json['citation'];
-        return this.descInfos;
-      })
-    );
-}
+          return this.descInfos;
+        })
+      );
+  }
 
   // Rechercher un satellite sur le site du catalogue Celestrak
   search(): void {

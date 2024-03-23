@@ -5,15 +5,16 @@ import { BehaviorSubject, Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class MapService {
-  Infos: any = [];
+
+  static Infos: any = [];
 
   constructor() { }
 
-  updatePos(info: any[]){
+  static updatePos(info: any[]){
     this.Infos = info;
   }
 
-  getPos(): any[] {
+  static getPos(): any[] {
     return this.Infos;
   }
 }

@@ -1,10 +1,11 @@
-import {Component, EventEmitter, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { ApiService } from "../../services/api.service";
 import { CommonModule } from "@angular/common";
-import { delay, interval, Observable, of, retry, retryWhen, switchMap, takeWhile, throwError } from 'rxjs';
+import {async, delay, interval, Observable, of, pipe, retry, retryWhen, switchMap, takeWhile, throwError} from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { FormsModule } from "@angular/forms";
 import { MapService } from '../../services/map.service';
+import { EventService } from '../../services/event.service';
 
 @Component({
   selector: 'app-select-satellites',
@@ -16,7 +17,6 @@ import { MapService } from '../../services/map.service';
 })
 
 export class SelectSatellitesComponent implements OnInit {
-  @Input() fetchNewPos: EventEmitter<void> = new EventEmitter<void>();
   Pos: any = []; // Première requête à celestrak
   positions$: Observable<any> | undefined; // Itérateur sur les positions du satellite
   searchTerm: string = '';
@@ -28,49 +28,60 @@ export class SelectSatellitesComponent implements OnInit {
   cachePos: any[] = [];
 
 
-  constructor(private apiService: ApiService, private mapService: MapService) { }
+  constructor(private apiService: ApiService, private mapService: MapService, private eventService: EventService) {
+    interval(500).pipe(
+    takeWhile(() => true)).
+    subscribe( async () => {
+      if (EventService.fetchNewPos) {
+        console.log('fetchNewPos received')
+        for (let i = 0; i < this.cachePos.length; i++) {
+          let id = this.cachePos[i].info.satId;
+          const pos = await this.fetchPos(id).toPromise();
+          if (pos && !this.cachePos.some(cachedPos => cachedPos.info.satid === pos['info'].satid)) {
+            this.cachePos[i] = pos;
+          }
+        }
+      }
+    });
+  }
 
-ngOnInit(): void {
-  this.fetch('25544');
-  this.mapService.updatePos(this.cachePos);
 
-  this.fetchNewPos.subscribe(async () => {
-    console.log('fetchNewPos')
-    for (let i = 0; i < this.cachePos.length; i++) {
-      let id = this.cachePos[i].info.satId;
+
+
+  ngOnInit(): void {
+    this.fetch('25544');
+  }
+
+
+  async fetch(id: string): Promise<void> {
+    try {
+      const info = await this.fetchInfos(id).toPromise();
+      if (info && !this.cacheInfos.some(cachedInfo => cachedInfo.norad_cat_id === info['noradId'])) {
+        this.cacheInfos.push(info);
+      }
+
       const pos = await this.fetchPos(id).toPromise();
       if (pos && !this.cachePos.some(cachedPos => cachedPos.info.satid === pos['info'].satid)) {
-        this.cachePos[i] = pos;
+        this.cachePos.push(pos);
       }
-    }
-    console.log('fetchNewPos end')
-    this.mapService.updatePos(this.cachePos);
-    console.log(this.mapService.getPos())
-  });
-}
 
-async fetch(id: string): Promise<void> {
-  try {
-    const info = await this.fetchInfos(id).toPromise();
-    if (info && !this.cacheInfos.some(cachedInfo => cachedInfo.norad_cat_id === info['noradId'])) {
-      this.cacheInfos.push(info);
-    }
+      if (this.cachePos.length > 5) {
+        this.cachePos.shift();
+        this.cacheInfos.shift();
+      }
 
-    const pos = await this.fetchPos(id).toPromise();
-    if (pos && !this.cachePos.some(cachedPos => cachedPos.info.satid === pos['info'].satid)) {
-      this.cachePos.push(pos);
-    }
+      MapService.updatePos(this.cachePos);
 
-    this.fetchNewPos.emit();
+      EventService.fetchNewPos = false
+      console.log('fetchNewPos end')
 
-    if (this.cachePos.length > 5) {
-      this.cachePos.shift();
-      this.cacheInfos.shift();
+      EventService.fetchCompleted = true;
+      console.log('fetchCompleted emitted');
+
+    } catch (error) {
+      console.error(error);
     }
-  } catch (error) {
-    console.error(error);
   }
-}
 
 
   // Récupérer les données de N2YO

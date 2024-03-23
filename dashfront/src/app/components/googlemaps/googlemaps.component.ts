@@ -1,11 +1,11 @@
-import {Component, OnInit, AfterViewInit} from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Loader } from '@googlemaps/js-api-loader';
 import { MapService } from '../../services/map.service';
-import {Observable, interval, of, Subscription, takeWhile} from 'rxjs';
+import { Observable, interval, of, Subscription, takeWhile } from 'rxjs';
 import { map, catchError, delay, switchMap, retry } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {EventService} from "../../services/event.service";
+import { EventService } from "../../services/event.service";
 
 let myMap: google.maps.Map, infoWindow: google.maps.InfoWindow;
 
@@ -29,16 +29,16 @@ export class GooglemapsComponent implements OnInit, AfterViewInit {
 
   constructor(private mapService: MapService, private eventService: EventService) {
     interval(500).pipe(
-    takeWhile(() => true)).
-    subscribe( async () => {
-      console.log("fetchCompleted: " + EventService.fetchCompleted)
-      if (EventService.fetchCompleted) {
-        console.log('fetchCompleted received')
-        this.Infos = MapService.getPos();
-        EventService.fetchCompleted = false;
-        console.log('fetchCompleted end')
-      }
-    });
+      takeWhile(() => true)).
+      subscribe(async () => {
+        //console.log("fetchCompleted: " + EventService.fetchCompleted)
+        if (EventService.fetchCompleted) {
+          //console.log('fetchCompleted received')
+          this.Infos = MapService.getPos();
+          EventService.fetchCompleted = false;
+          //console.log('fetchCompleted end')
+        }
+      });
   }
 
   Infos: any[] = [];
@@ -57,7 +57,7 @@ export class GooglemapsComponent implements OnInit, AfterViewInit {
       var latlng = new google.maps.LatLng(0, 0);
       var imageSatellite = {
         url: "https://static.thenounproject.com/png/5350-200.png", // url
-        scaledSize: new google.maps.Size(50, 50) // size
+        scaledSize: new google.maps.Size(40, 40) // size
       };
       myMap = new google.maps.Map(
         document.getElementById("map") as HTMLElement,
@@ -104,30 +104,32 @@ export class GooglemapsComponent implements OnInit, AfterViewInit {
         }
       });
 
-      const markers: google.maps.Marker[] = this.Infos.map((info) =>
-        new google.maps.Marker({
-          position: latlng,
-          map: myMap,
-          icon: imageSatellite,
-          title: info.info.name,
-        })
-      );
+      var markers: google.maps.Marker[];
 
       positions$ = interval(1000)
         .pipe(map(index => {
-          console.log(this.Infos)
+
+          markers = this.Infos.map((info) =>
+            new google.maps.Marker({
+              icon: imageSatellite,
+              map: myMap,
+              title: info.info.name
+            })
+          );
+
           for (let i = 0; i < this.Infos.length; i++) {
-            if (index % this.Infos[i].position.length === this.Infos[i].position.length - 1) {
+            if (index % this.Infos[i].positions.length === this.Infos[i].positions.length - 1) {
               EventService.fetchNewPos = true; // Emit the event here
-              console.log('fetchNewPos emitted in GooglemapsComponent')
+              console.log('fetchNewPos emitted in GooglemapsComponent');
               positions$.unsubscribe();
+
               positions$ = interval(1000)
                 .pipe(map(index => {
-                  latlng = new google.maps.LatLng(this.Infos[i].position[index % this.Infos[i].position.length].lat, this.Infos[i].position[index % this.Infos[i].position.length].lng);
+                  latlng = new google.maps.LatLng(this.Infos[i].positions[index % this.Infos[i].positions.length].satlatitude, this.Infos[i].positions[index % this.Infos[i].positions.length].satlongitude);
                   markers[i].setPosition(latlng);
                 })).subscribe();
             } else {
-              latlng = new google.maps.LatLng(this.Infos[i].position[index % this.Infos[i].position.length].lat, this.Infos[i].position[index % this.Infos[i].position.length].lng);
+              latlng = new google.maps.LatLng(this.Infos[i].positions[index % this.Infos[i].positions.length].satlatitude, this.Infos[i].positions[index % this.Infos[i].positions.length].satlongitude);
               markers[i].setPosition(latlng);
             }
           }

@@ -1,11 +1,11 @@
-html,
-body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-}
+#map {
+    width: 75vw;
+    height: 85vh;
+    border: 1px solid black;
+    border-radius: 10px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+    // permet de centrer la map
+    margin: 1%;
+    float: right;
 
-map {
-    height: 100%;
-    display: block;
 }

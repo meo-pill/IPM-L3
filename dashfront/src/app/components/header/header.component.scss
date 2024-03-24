@@ -1,27 +1,51 @@
-.Header {
-  display: flex;
-  justify-content: flex-end;
-  background: black;
-  padding: 1vw;
+#fond-logo{
+  background-color: black;
+  overflow: auto;
 }
 
-.Header ul {
-  direction: rtl;
-  display: flex;
-  justify-content: flex-end;
+#logo-entier{
+  float: left;
 }
 
-.Header ul li {
-  list-style-type: none;
-  display: inline;
-  margin-right: 2vw; // Change this value to adjust the spacing
+#logo-titre{
+  float: right;
 }
 
-li:hover {
+#header-page{
+  min-height: 80vh;
+  height: 80vh;
+  max-height: 80vh;
+  background-image: url('../../../assets/img/image-fond.jpg');
+  background-position: bottom;
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: auto;
+  height: auto;
+  max-height: auto;
+  max-width: auto;
+}
+
+#info{
+  margin-top: 10%;
+}
+
+#title{
+  color: white;
+  text-align: center;
+  margin: 5vh;
   font-weight: bold;
-  cursor: pointer;
+  text-transform: uppercase;
+  text-shadow: 1px 1px 0 black, -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black; // Simule un contour
 }
 
-table, table th, table td{
-  border: 0.2vw solid black;
+
+#text-presentation{
+  color: white;
+  text-align: center;
+  margin: 5vh;
+  margin-left: 15vw;
+  margin-right: 15vw;
+  font-size: 1em;
+  text-shadow: 1px 1px 0 black, -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black; // Simule un contour
+
 }

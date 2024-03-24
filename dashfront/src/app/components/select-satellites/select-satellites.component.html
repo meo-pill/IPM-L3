@@ -65,21 +65,31 @@
     </div>
 </div>
 
-<div>
-  <div>
-      <h4>Infos</h4>
+<div class ="card card-coin" id="card-infos">
+  <div class="card-hearder card-coin">
+      <h3 class= "card-title">Infos</h3>
   </div>
-  <div>
-      <ul *ngFor="let item of descInfos | keyvalue">
-          <li *ngIf="item.key === 'description'">{{ item.value }}</li>
-          <li *ngIf="item.key === 'launch'">{{ item.value }}</li>
-          <li *ngIf="item.key === 'name'">{{ item.value }}</li>
-          <li *ngIf="item.key === 'names'">{{ item.value }}</li>
-          <li *ngIf="item.key === 'noradId'">{{ item.value }}</li>
-          <li *ngIf="item.key === 'origin'">{{ item.value }}</li>
-          <li *ngIf="item.key === 'satId'">{{ item.value }}</li>
-          <li *ngIf="item.key === 'site'">{{ item.value }}</li>
-          <li *ngIf="item.key === 'status'">{{ item.value }}</li>
+  <div class="card-body">
+      <ul *ngFor="let item of descInfos | keyvalue" class="list-group">
+          <li *ngIf="item.key === 'launch'" class="list-group-item"> <strong >{{item.key | uppercase}} :</strong> {{ item.value }}</li>
+          <li *ngIf="item.key === 'name'" class="list-group-item"> <strong>{{item.key | uppercase}} :</strong> {{ item.value }}</li>
+          <li *ngIf="item.key === 'names'" class="list-group-item"> <strong>{{item.key | uppercase}} :</strong> {{ item.value }}</li>
+          <li *ngIf="item.key === 'noradId'" class="list-group-item"> <strong>{{item.key | uppercase}} :</strong> {{ item.value }}</li>
+          <li *ngIf="item.key === 'origin'" class="list-group-item"> <strong>{{item.key | uppercase}} :</strong> {{ item.value }}</li>
+          <li *ngIf="item.key === 'satId'" class="list-group-item"> <strong>{{item.key | uppercase}} :</strong> {{ item.value }}</li>
+          <li *ngIf="item.key === 'site'" class="list-group-item"> <strong>{{item.key | uppercase}} :</strong> {{ item.value }}</li>
+          <li *ngIf="item.key === 'status'" class="list-group-item"> <strong>{{item.key | uppercase}} :</strong> {{ item.value }}</li>
+      </ul>
+  </div>
+</div>
+
+<div class="card card-coin" id="card-infos">
+  <div class="card-hearder card-coin">
+      <h3 class="card-title">Description</h3>
+  </div>
+  <div class="card-body">
+      <ul *ngFor="let item of descInfos | keyvalue" class="list-group">
+          <li *ngIf="item.key === 'description'" class="list-group-item">{{ item.value }}</li>
       </ul>
   </div>
 </div>

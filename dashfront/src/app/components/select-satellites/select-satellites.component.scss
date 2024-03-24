@@ -6,7 +6,29 @@
   margin-left: 1vw;
   width: 20vw;
 }
+
+.card-coin{
+  margin: 1%;
+  border-radius: 10px;
+}
+
+.card-hearder{
+  background-color: #384177;
+}
+
+.card-title{
+  margin: 3%;
+}
+
 input{
   outline: none;
   width: 100%;
+}
+.list-group-item{
+  color: black;
+}
+
+#card-infos{
+  width: 50%;
+  color: black;
 }

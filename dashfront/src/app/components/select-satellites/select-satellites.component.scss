@@ -2,6 +2,11 @@
   background: white;
 }
 
+.navbar{
+  position: sticky;
+  top:0;
+}
+
 .search-bar{
   margin-left: 1vw;
   width: 20vw;
@@ -26,19 +31,27 @@ input{
 }
 .list-group-item{
   color: black;
+  text-align: left;
 }
 
 .card-infos{
   width: 55%;
   float: left;
+  clear: left;
 }
 
 .card-detail{
   width: 41%;
   float: right;
+  clear: right;
 }
 
 #img-satellite{
   width: 100%;
   height: auto;
+}
+
+#info-sat{
+  margin: 2%;
+  top : 2vh;
 }

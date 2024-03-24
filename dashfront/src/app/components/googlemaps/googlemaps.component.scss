@@ -1,21 +1,11 @@
 #map {
     width: 80vw;
-    display: flex;
     height: 80vh;
-    // permetre au footer component de s'afficher en dessous
-    z-index: 0;
-    margin: 0 auto;
     border: 1px solid black;
     border-radius: 10px;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
     // permet de centrer la map
-    margin-top: 10vh;
-    // permet de centrer la map
-    margin-bottom: 10vh;
-    // permet de centrer la map
-    margin-left: 10vw;
-    // permet de centrer la map
-    margin-right: 10vw;
-
+    margin: 2%;
+    float: right;
 
 }

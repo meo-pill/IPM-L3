@@ -6,11 +6,12 @@ import { catchError, map } from 'rxjs/operators';
 import { FormsModule } from "@angular/forms";
 import { MapService } from '../../services/map.service';
 import { EventService } from '../../services/event.service';
+import { GooglemapsComponent } from '../googlemaps/googlemaps.component';
 
 @Component({
   selector: 'app-select-satellites',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, GooglemapsComponent],
   providers: [ApiService],
   templateUrl: './select-satellites.component.html',
   styleUrl: './select-satellites.component.scss'

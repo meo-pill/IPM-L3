@@ -42,13 +42,20 @@ export class GooglemapsComponent implements OnInit, AfterViewInit {
   }
 
   Infos: any[] = [];
-
+  Markers: google.maps.Marker[] = [];
   async ngOnInit(): Promise<void> {
     this.initMap();
   }
 
   async ngAfterViewInit(): Promise<void> {
 
+  }
+
+  clearMarkers(): void {
+    for (let i = 0; i < this.Markers.length; i++) {
+      this.Markers[i].setMap(null);
+    }
+    this.Markers = [];
   }
 
   async initMap(): Promise<void> {
@@ -104,18 +111,23 @@ export class GooglemapsComponent implements OnInit, AfterViewInit {
         }
       });
 
-      var markers: google.maps.Marker[];
+
 
       positions$ = interval(1000)
         .pipe(map(index => {
 
-          markers = this.Infos.map((info) =>
+          this.clearMarkers();
+
+
+          this.Markers = this.Infos.map((info) =>
             new google.maps.Marker({
               icon: imageSatellite,
               map: myMap,
               title: info.info.name
             })
           );
+
+          console.log(this.Markers.length)
 
           for (let i = 0; i < this.Infos.length; i++) {
             if (index % this.Infos[i].positions.length === this.Infos[i].positions.length - 1) {
@@ -126,11 +138,11 @@ export class GooglemapsComponent implements OnInit, AfterViewInit {
               positions$ = interval(1000)
                 .pipe(map(index => {
                   latlng = new google.maps.LatLng(this.Infos[i].positions[index % this.Infos[i].positions.length].satlatitude, this.Infos[i].positions[index % this.Infos[i].positions.length].satlongitude);
-                  markers[i].setPosition(latlng);
+                  this.Markers[i].setPosition(latlng);
                 })).subscribe();
             } else {
               latlng = new google.maps.LatLng(this.Infos[i].positions[index % this.Infos[i].positions.length].satlatitude, this.Infos[i].positions[index % this.Infos[i].positions.length].satlongitude);
-              markers[i].setPosition(latlng);
+              this.Markers[i].setPosition(latlng);
             }
           }
         })).subscribe();

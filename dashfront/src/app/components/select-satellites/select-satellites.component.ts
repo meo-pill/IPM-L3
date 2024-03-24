@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { ApiService } from "../../services/api.service";
 import { CommonModule } from "@angular/common";
-import { delay, interval, Observable, of, retry, retryWhen, switchMap, takeWhile, throwError } from 'rxjs';
+import {async, delay, interval, Observable, of, pipe, retry, retryWhen, switchMap, takeWhile, throwError} from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { FormsModule } from "@angular/forms";
 import { MapService } from '../../services/map.service';
+import { EventService } from '../../services/event.service';
 
 @Component({
   selector: 'app-select-satellites',
@@ -16,80 +17,102 @@ import { MapService } from '../../services/map.service';
 })
 
 export class SelectSatellitesComponent implements OnInit {
-  Infos: any = []; // Première requête à celestrak
+  Pos: any = []; // Première requête à celestrak
   positions$: Observable<any> | undefined; // Itérateur sur les positions du satellite
   searchTerm: string = '';
   searchResult: Array<string> = [];
   description: string = '';
-  descInfos: { [key: string]: string } = {
-    // 'name': '',
-    // 'img': '',
-    //
-    // 'satId': '',
-    // 'noradId': '',
-    //
-    // 'desc': '',
-    // 'names': '',
-    // 'site': '',
-    // 'origin': '',
-    // 'launch': '',
-  };
+  descInfos: { [key: string]: string } = {};
+
+  cacheInfos: any[] = [];
+  cachePos: any[] = [];
 
 
-  constructor(private apiService: ApiService, private mapService: MapService) { }
+  constructor(private apiService: ApiService, private mapService: MapService, private eventService: EventService) {
+    interval(500).pipe(
+    takeWhile(() => true)).
+    subscribe( async () => {
+      if (EventService.fetchNewPos) {
+        console.log('fetchNewPos received')
+        for (let i = 0; i < this.cachePos.length; i++) {
+          let id = this.cachePos[i].info.satId;
+          const pos = await this.fetchPos(id).toPromise();
+          if (pos && !this.cachePos.some(cachedPos => cachedPos.info.satid === pos['info'].satid)) {
+            this.cachePos[i] = pos;
+          }
+        }
+      }
+    });
+  }
+
+
+
 
   ngOnInit(): void {
     this.fetch('25544');
   }
 
-  fetch(id: string): void {
-    this.fetchInfos(id);
-    this.fetchPos(id);
+
+  async fetch(id: string): Promise<void> {
+    try {
+      const info = await this.fetchInfos(id).toPromise();
+      if (info && !this.cacheInfos.some(cachedInfo => cachedInfo.norad_cat_id === info['noradId'])) {
+        this.cacheInfos.push(info);
+      }
+
+      const pos = await this.fetchPos(id).toPromise();
+      if (pos && !this.cachePos.some(cachedPos => cachedPos.info.satid === pos['info'].satid)) {
+        this.cachePos.push(pos);
+      }
+
+      if (this.cachePos.length > 5) {
+        this.cachePos.shift();
+        this.cacheInfos.shift();
+      }
+
+      MapService.updatePos(this.cachePos);
+
+      EventService.fetchNewPos = false
+      console.log('fetchNewPos end')
+
+      EventService.fetchCompleted = true;
+      console.log('fetchCompleted emitted');
+
+    } catch (error) {
+      console.error(error);
+    }
   }
 
 
   // Récupérer les données de N2YO
-  fetchPos(req: string): void {
-    let alive = true;
-    this.apiService.getPos(req)
-
-      // Serveur déconnecté, réessayer la connexion
-      .pipe(catchError(err => {
-        console.error('Server connexion unestablished.\n Attempting to reconnect ...');
-        return of(err).pipe(delay(5000), switchMap(() => throwError(err))); // Throw the error after the delay
-      }), retry())
-
-      // Serveur connecté, récupérer les données
-      .subscribe(res => {
-        this.Infos = res;
-        this.positions$ = interval(1000)
-
-          // Itérer sur les données récupérées et envoyer la nouvelle ligne chaque seconde
-          .pipe(takeWhile(() => alive),
-            map(i => {
-              // Fin de boucle : recommencer le procédé
-              if (i % this.Infos.positions.length === this.Infos.positions.length - 1) {
-                alive = false;
-                return this.fetchPos(req);
-              }
-              return this.Infos.positions[i % this.Infos.positions.length];
-            })
-          );
-      });
+  fetchPos(req: string): Observable<any> {
+    return this.apiService.getPos(req)
+      .pipe(
+        catchError(err => {
+          console.error('Server connexion unestablished.\n Attempting to reconnect ...');
+          return of(err).pipe(delay(5000), switchMap(() => throwError(err))); // Throw the error after the delay
+        }),
+        retry(),
+        map(res => {
+          this.Pos = JSON.parse(JSON.stringify(res));
+          return this.Pos;
+        })
+      );
   }
 
   // Récupérer description & image du satellite
-  fetchInfos(id: string): void {
-    this.apiService.getInfos(id)
 
-      .pipe(catchError(err => {
-        console.error();
-        return of(err).pipe(delay(5000), switchMap(() => throwError(err))); // Throw the error after the delay
-      }), retry())
-
-      .subscribe(res => {
-        let json = JSON.parse(JSON.stringify(res));
-        this.descInfos = {};
+  fetchInfos(id: string): Observable<{ [p: string]: string }> {
+    return this.apiService.getInfos(id)
+      .pipe(
+        catchError(err => {
+          console.error();
+          return of(err).pipe(delay(5000), switchMap(() => throwError(err))); // Throw the error after the delay
+        }),
+        retry(),
+        map(res => {
+          let json = JSON.parse(JSON.stringify(res));
+          this.descInfos = {};
         if (json['name'] != "") {
           this.descInfos['name'] = json['name'];
           if (json['names'] != "") this.descInfos['names'] = json['names'];
@@ -102,7 +125,9 @@ export class SelectSatellitesComponent implements OnInit {
           if (json['website'] != "") this.descInfos['site'] = json['website'];
         }
         if (!json['citation'].includes("CITATION NEEDED") && json['citation'] !== "") this.descInfos['description'] = json['citation'];
-      });
+          return this.descInfos;
+        })
+      );
   }
 
   // Rechercher un satellite sur le site du catalogue Celestrak

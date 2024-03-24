@@ -1,27 +1,12 @@
-.Header {
-  display: flex;
-  justify-content: flex-end;
-  background: black;
-  padding: 1vw;
+#recherche-sat{
+  background: white;
 }
 
-.Header ul {
-  direction: rtl;
-  display: flex;
-  justify-content: flex-end;
+.search-bar{
+  margin-left: 1vw;
+  width: 20vw;
 }
-
-.Header ul li {
-  list-style-type: none;
-  display: inline;
-  margin-right: 2vw; // Change this value to adjust the spacing
-}
-
-li:hover {
-  font-weight: bold;
-  cursor: pointer;
-}
-
-table, table th, table td{
-  border: 0.2vw solid black;
+input{
+  outline: none;
+  width: 100%;
 }

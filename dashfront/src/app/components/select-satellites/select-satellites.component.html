@@ -1,10 +1,14 @@
-<div class="header Header">
-  <ul>
-    <li><img class="btn btn-outline-dark" src="#">bouton footer</li>
-    <li><a class="btn btn-outline-dark" href="#">bouton footer</a></li>
-    <li><a class="btn btn-outline-dark" href="#">bouton footer</a></li>
-  </ul>
-  <input [(ngModel)]="searchTerm" (keyup.enter)="search()" placeholder="Search...">
+<div class="navbar bg-dark">
+  <div class="search-bar input-group" id= "recherche-sat">
+    <!---
+    <ul>
+      <li><img class="btn btn-outline-dark" src="#">bouton footer</li>
+      <li><a class="btn btn-outline-dark" href="#">bouton footer</a></li>
+      <li><a class="btn btn-outline-dark" href="#">bouton footer</a></li>
+    </ul>
+    -->
+    <input [(ngModel)]="searchTerm" (keyup.enter)="search()" placeholder="Search...">
+  </div>
 </div>
 
 <div>
@@ -59,4 +63,23 @@
             </tbody>
         </table>
     </div>
+</div>
+
+<div>
+  <div>
+      <h4>Infos</h4>
+  </div>
+  <div>
+      <ul *ngFor="let item of descInfos | keyvalue">
+          <li *ngIf="item.key === 'description'">{{ item.value }}</li>
+          <li *ngIf="item.key === 'launch'">{{ item.value }}</li>
+          <li *ngIf="item.key === 'name'">{{ item.value }}</li>
+          <li *ngIf="item.key === 'names'">{{ item.value }}</li>
+          <li *ngIf="item.key === 'noradId'">{{ item.value }}</li>
+          <li *ngIf="item.key === 'origin'">{{ item.value }}</li>
+          <li *ngIf="item.key === 'satId'">{{ item.value }}</li>
+          <li *ngIf="item.key === 'site'">{{ item.value }}</li>
+          <li *ngIf="item.key === 'status'">{{ item.value }}</li>
+      </ul>
+  </div>
 </div>

@@ -1,5 +1,5 @@
 <div class="navbar bg-dark">
-  <div class="search-bar input-group" id= "recherche-sat">
+  <div class="search-bar input-group" id="recherche-sat">
     <!---
     <ul>
       <li><img class="btn btn-outline-dark" src="#">bouton footer</li>
@@ -16,80 +16,111 @@
     <h4>Positions</h4>
   </div>
 
-    <div>
-        <ul>
-            <li *ngFor="let result of searchResult" (click)="fetch(result.split('[')[1].split(']')[0]);">{{result}}</li>
-        </ul>
-        <table class="table-bordered">
-            <thead>
-                <tr>
-                    <th>Nom</th>
-                    <th>Id</th>
-                    <th>Latitude</th>
-                    <th>Longitude</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>{{Pos?.info?.satname}}</td>
-                    <td>{{Pos?.info?.satid}}</td>
-                    <td>{{(positions$ | async)?.satlatitude}}</td>
-                    <td>{{(positions$ | async)?.satlongitude}}</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+  <div>
+    <ul>
+      <li *ngFor="let result of searchResult" (click)="fetch(result.split('[')[1].split(']')[0]);">{{result}}</li>
+    </ul>
+    <table class="table-bordered">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Id</th>
+          <th>Latitude</th>
+          <th>Longitude</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{Pos?.info?.satname}}</td>
+          <td>{{Pos?.info?.satid}}</td>
+          <td>{{(positions$ | async)?.satlatitude}}</td>
+          <td>{{(positions$ | async)?.satlongitude}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <div>
-    <div>
-        <h4>Infos</h4>
-    </div>
-    <div>
-        <table class="table-bordered">
-            <thead>
-                <tr>
-                    <th *ngFor="let item of descInfos | keyvalue">{{ item.key }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td *ngFor="let item of descInfos | keyvalue">
-                        <img *ngIf="item.key === 'img'" [src]="item.value" alt="Image">
-                        <a *ngIf="item.key === 'site'" [href]="item.value" target="_blank">{{ item.value }}</a>
-                        <span *ngIf="item.key !== 'img' && item.key !== 'site'">{{ item.value }}</span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+  <div>
+    <h4>Infos</h4>
+  </div>
+  <div>
+    <table class="table-bordered">
+      <thead>
+        <tr>
+          <th *ngFor="let item of descInfos | keyvalue">{{ item.key }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td *ngFor="let item of descInfos | keyvalue">
+            <img *ngIf="item.key === 'img'" [src]="item.value" alt="Image">
+            <a *ngIf="item.key === 'site'" [href]="item.value" target="_blank">{{ item.value }}</a>
+            <span *ngIf="item.key !== 'img' && item.key !== 'site'">{{ item.value }}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
-<div class ="card card-coin" id="card-infos">
-  <div class="card-hearder card-coin">
-      <h3 class= "card-title">Infos</h3>
-  </div>
-  <div class="card-body">
+<div id="info-sat">
+
+  <div class="card card-coin card-infos" id="card-info">
+    <div class="card-hearder card-coin">
+      <h3 class="card-title">Infos</h3>
+    </div>
+    <div class="card-body">
       <ul *ngFor="let item of descInfos | keyvalue" class="list-group">
-          <li *ngIf="item.key === 'launch'" class="list-group-item"> <strong >{{item.key | uppercase}} :</strong> {{ item.value }}</li>
-          <li *ngIf="item.key === 'name'" class="list-group-item"> <strong>{{item.key | uppercase}} :</strong> {{ item.value }}</li>
-          <li *ngIf="item.key === 'names'" class="list-group-item"> <strong>{{item.key | uppercase}} :</strong> {{ item.value }}</li>
-          <li *ngIf="item.key === 'noradId'" class="list-group-item"> <strong>{{item.key | uppercase}} :</strong> {{ item.value }}</li>
-          <li *ngIf="item.key === 'origin'" class="list-group-item"> <strong>{{item.key | uppercase}} :</strong> {{ item.value }}</li>
-          <li *ngIf="item.key === 'satId'" class="list-group-item"> <strong>{{item.key | uppercase}} :</strong> {{ item.value }}</li>
-          <li *ngIf="item.key === 'site'" class="list-group-item"> <strong>{{item.key | uppercase}} :</strong> {{ item.value }}</li>
-          <li *ngIf="item.key === 'status'" class="list-group-item"> <strong>{{item.key | uppercase}} :</strong> {{ item.value }}</li>
+        <li *ngIf="item.key === 'launch'" class="list-group-item"> <strong>{{item.key | uppercase}} :</strong> {{
+          item.value }}</li>
+        <li *ngIf="item.key === 'name'" class="list-group-item"> <strong>{{item.key | uppercase}} :</strong> {{
+          item.value }}</li>
+        <li *ngIf="item.key === 'names'" class="list-group-item"> <strong>{{item.key | uppercase}} :</strong> {{
+          item.value }}</li>
+        <li *ngIf="item.key === 'noradId'" class="list-group-item"> <strong>{{item.key | uppercase}} :</strong> {{
+          item.value }}</li>
+        <li *ngIf="item.key === 'satId'" class="list-group-item"> <strong>{{item.key | uppercase}} :</strong> {{
+          item.value }}</li>
+        <li *ngIf="item.key === 'site'" class="list-group-item"> <strong>{{item.key | uppercase}} :</strong> {{
+          item.value }}</li>
+        <li *ngIf="item.key === 'origin'" class="list-group-item"> <strong>{{item.key | uppercase}} :</strong> {{
+          item.value }}</li>
       </ul>
+    </div>
   </div>
-</div>
 
-<div class="card card-coin" id="card-infos">
-  <div class="card-hearder card-coin">
+  <div class="card card-coin card-detail">
+    <div class="card-hearder card-coin">
+      <h3 class="card-title">Image</h3>
+    </div>
+    <div class="card-body">
+      <ul *ngFor="let item of descInfos | keyvalue" class="list-group">
+        <img *ngIf="item.key === 'img'" [src]="item.value" alt="Image du satellite" id="img-satellite">
+      </ul>
+    </div>
+  </div>
+
+  <div class="card card-coin card-infos">
+    <div class="card-hearder card-coin">
       <h3 class="card-title">Description</h3>
-  </div>
-  <div class="card-body">
+    </div>
+    <div class="card-body">
       <ul *ngFor="let item of descInfos | keyvalue" class="list-group">
-          <li *ngIf="item.key === 'description'" class="list-group-item">{{ item.value }}</li>
+        <li *ngIf="item.key === 'description'" class="list-group-item">{{ item.value }}</li>
       </ul>
+    </div>
+  </div>
+
+  <div class="card card-coin card-detail">
+    <div class="card-hearder card-coin">
+      <h3 class="card-title">Statut</h3>
+    </div>
+    <div class="card-body">
+      <ul *ngFor="let item of descInfos | keyvalue" class="list-group">
+        <li *ngIf="item.key === 'status'" class="list-group-item">{{ item.value }}</li>
+      </ul>
+    </div>
   </div>
 </div>

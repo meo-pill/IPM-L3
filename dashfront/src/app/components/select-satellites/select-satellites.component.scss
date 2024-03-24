@@ -28,7 +28,17 @@ input{
   color: black;
 }
 
-#card-infos{
-  width: 50%;
-  color: black;
+.card-infos{
+  width: 55%;
+  float: left;
+}
+
+.card-detail{
+  width: 41%;
+  float: right;
+}
+
+#img-satellite{
+  width: 100%;
+  height: auto;
 }

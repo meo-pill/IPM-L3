@@ -5,7 +5,6 @@ import { Observable, interval, of, Subscription, takeWhile } from 'rxjs';
 import { map, catchError, delay, switchMap, retry } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { EventService } from "../../services/event.service";
 
 let myMap: google.maps.Map, infoWindow: google.maps.InfoWindow;
 
@@ -27,21 +26,15 @@ const loader = new Loader({
 
 export class GooglemapsComponent implements OnInit, AfterViewInit {
 
-  constructor(private mapService: MapService, private eventService: EventService) {
-    interval(500).pipe(
-      takeWhile(() => true)).
-      subscribe(async () => {
-        //console.log("fetchCompleted: " + EventService.fetchCompleted)
-        if (EventService.fetchCompleted) {
-          //console.log('fetchCompleted received')
-          this.Infos = MapService.getPos();
-          EventService.fetchCompleted = false;
-          //console.log('fetchCompleted end')
-        }
-      });
+  constructor() {
+    MapService.setGooglemaps(this);
   }
 
-  Infos: any[] = [];
+  fetchCompleted(pos: any[]): void {
+      this.Pos = pos
+  }
+
+  Pos: any[] = [];
   Markers: google.maps.Marker[] = [];
   async ngOnInit(): Promise<void> {
     this.initMap();
@@ -118,30 +111,43 @@ export class GooglemapsComponent implements OnInit, AfterViewInit {
 
           this.clearMarkers();
 
+          this.Markers = this.Pos.map((info) => {
+              let marker = new google.maps.Marker({
+                icon: imageSatellite,
+                map: myMap,
+                title: info.info.satid,
+                label: {
+                  text: info.info.satname,
+                  color: "lightgrey",
+                  fontFamily: "Archivo",
+                  fontWeight: "bolder",
+                  className: "label"
+                },
+                clickable: true
+              })
 
-          this.Markers = this.Infos.map((info) =>
-            new google.maps.Marker({
-              icon: imageSatellite,
-              map: myMap,
-              title: info.info.name
-            })
+            marker.addListener("click", () => {
+              MapService.markerClicked(info.info.satid);
+            });
+
+            return marker;
+            }
           );
 
-          console.log(this.Markers.length)
 
-          for (let i = 0; i < this.Infos.length; i++) {
-            if (index % this.Infos[i].positions.length === this.Infos[i].positions.length - 1) {
-              EventService.fetchNewPos = true; // Emit the event here
-              console.log('fetchNewPos emitted in GooglemapsComponent');
+          for (let i = 0; i < this.Pos.length; i++) {
+            if (index % this.Pos[i].positions.length === this.Pos[i].positions.length - 1) {
+              MapService.fetchNewPos();
+
               positions$.unsubscribe();
 
               positions$ = interval(1000)
                 .pipe(map(index => {
-                  latlng = new google.maps.LatLng(this.Infos[i].positions[index % this.Infos[i].positions.length].satlatitude, this.Infos[i].positions[index % this.Infos[i].positions.length].satlongitude);
+                  latlng = new google.maps.LatLng(this.Pos[i].positions[index % this.Pos[i].positions.length].satlatitude, this.Pos[i].positions[index % this.Pos[i].positions.length].satlongitude);
                   this.Markers[i].setPosition(latlng);
                 })).subscribe();
             } else {
-              latlng = new google.maps.LatLng(this.Infos[i].positions[index % this.Infos[i].positions.length].satlatitude, this.Infos[i].positions[index % this.Infos[i].positions.length].satlongitude);
+              latlng = new google.maps.LatLng(this.Pos[i].positions[index % this.Pos[i].positions.length].satlatitude, this.Pos[i].positions[index % this.Pos[i].positions.length].satlongitude);
               this.Markers[i].setPosition(latlng);
             }
           }

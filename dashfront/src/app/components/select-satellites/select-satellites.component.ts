@@ -5,7 +5,6 @@ import {async, delay, interval, Observable, of, pipe, retry, retryWhen, switchMa
 import { catchError, map } from 'rxjs/operators';
 import { FormsModule } from "@angular/forms";
 import { MapService } from '../../services/map.service';
-import { EventService } from '../../services/event.service';
 import { GooglemapsComponent } from '../googlemaps/googlemaps.component';
 
 @Component({
@@ -28,31 +27,27 @@ export class SelectSatellitesComponent implements OnInit {
   cacheInfos: any[] = [];
   cachePos: any[] = [];
 
-
-  constructor(private apiService: ApiService, private mapService: MapService, private eventService: EventService) {
-    interval(500).pipe(
-    takeWhile(() => true)).
-    subscribe( async () => {
-      if (EventService.fetchNewPos) {
-        console.log('fetchNewPos received')
-        for (let i = 0; i < this.cachePos.length; i++) {
-          let id = this.cachePos[i].info.satId;
-          const pos = await this.fetchPos(id).toPromise();
-          if (pos && !this.cachePos.some(cachedPos => cachedPos.info.satid === pos['info'].satid)) {
-            this.cachePos[i] = pos;
-          }
-        }
-      }
-    });
+  constructor(private apiService: ApiService) {
+    MapService.setSelect(this);
   }
 
+  async fetchNewPos(): Promise<void> {
+    for (let i = 0; i < this.cachePos.length; i++) {
+      let id = this.cachePos[i].info.satId;
+      const pos = await this.fetchPos(id).toPromise();
+      if (pos && !this.cachePos.some(cachedPos => cachedPos.info.satid === pos['info'].satid)) {
+        this.cachePos[i] = pos;
+      }
+    }
+  }
 
-
+  markerClicked(id: string): void {
+    this.descInfos = this.cacheInfos.find(i => i['noradId'] == id);
+  }
 
   ngOnInit(): void {
     this.fetch('25544');
   }
-
 
   async fetch(id: string): Promise<void> {
     try {
@@ -71,13 +66,7 @@ export class SelectSatellitesComponent implements OnInit {
         this.cacheInfos.shift();
       }
 
-      MapService.updatePos(this.cachePos);
-
-      EventService.fetchNewPos = false
-      console.log('fetchNewPos end')
-
-      EventService.fetchCompleted = true;
-      console.log('fetchCompleted emitted');
+      MapService.fetchCompleted(this.cachePos);
 
     } catch (error) {
       console.error(error);
@@ -111,6 +100,7 @@ export class SelectSatellitesComponent implements OnInit {
           return of(err).pipe(delay(5000), switchMap(() => throwError(err))); // Throw the error after the delay
         }),
         retry(),
+
         map(res => {
           let json = JSON.parse(JSON.stringify(res));
           this.descInfos = {};
@@ -126,7 +116,7 @@ export class SelectSatellitesComponent implements OnInit {
           if (json['website'] != "") this.descInfos['site'] = json['website'];
         }
         if (!json['citation'].includes("CITATION NEEDED") && json['citation'] !== "") this.descInfos['description'] = json['citation'];
-          return this.descInfos;
+        return this.descInfos;
         })
       );
   }

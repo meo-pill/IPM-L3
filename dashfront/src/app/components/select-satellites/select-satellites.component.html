@@ -66,13 +66,13 @@
 </div>
 -->
 <div id="next-map">
-  <div class="card card-coin" id="result-recherche">
+  <div class="card card-coin">
     <div class="card-hearder card-coin">
       <h3 class="card-title">recherche</h3>
     </div>
     <div class="card-body">
       <ul class="list-group">
-        <li *ngFor="let result of searchResult" (click)="fetch(result.split('[')[1].split(']')[0]);" class="list-group-item">{{result}}</li>
+        <li *ngFor="let result of searchResult" (click)="fetch(result.split('[')[1].split(']')[0]);"  id="result-recherche" class="list-group-item">{{result}}</li>
       </ul>
     </div>
   </div>
@@ -98,8 +98,8 @@
           item.value }}</li>
         <li *ngIf="item.key === 'satId'" class="list-group-item"> <strong>{{item.key | uppercase}} :</strong> {{
           item.value }}</li>
-        <li *ngIf="item.key === 'site'" class="list-group-item"> <strong>{{item.key | uppercase}} :</strong> {{
-          item.value }}</li>
+        <li *ngIf="item.key === 'site'" class="list-group-item"> <strong>{{item.key | uppercase}} :</strong> <a href="{{
+          item.value }}">Le site web du Satellite</a></li>
         <li *ngIf="item.key === 'origin'" class="list-group-item"> <strong>{{item.key | uppercase}} :</strong> {{
           item.value }}</li>
       </ul>
